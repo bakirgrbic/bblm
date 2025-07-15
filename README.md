@@ -1,12 +1,12 @@
-# bblm-fun
+# bblm
 
 ## Description
-Project to better undestand Language Models (LMs), pre-training, finetuning, 
+A project to better undestand Language Models (LMs), pre-training, finetuning, 
 and modifying LMs. Inspired by the [BabyLM Challenge](https://babylm.github.io/index.html).
 
 NOTE:
 This project is still a work in progress.
-- tiny-electra-elc does not work with WOS finetuning task
+- electra-tiny-elc does not work with WOS finetuning task
 
 ## How to Run
 Tested on arm64 MacOS and AWS Sagemaker environments. 
