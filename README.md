@@ -7,24 +7,32 @@ This project is still a work in progress.
 - electra-tiny-elc does not work with WOS finetuning task
 
 ## How to Run
-Tested on arm64 MacOS and AWS Sagemaker environments. 
-0. Set up environment
-    - Make sure you have some version of conda and use the following command:
-    ```shell
-    make env
-    ```
-    - If running on AWS Sagemaker, install `transformers` and `torch` libraries using pip. 
-1. Download necessary data as described in [data/README.md](./data/README.md).
-2. Optionally run tests
-    - Use the following to run unit tests and to check data is downloaded and in the right spot.
-    ```shell
-    make fast-tests
-    ```
-    - Use the following to run slower tests that are useful for checking pipelines are not throwing any errors
-    ```shell
-    make slow-tests
-    ```
-3. Use the commands below to begin pretraining or finetuning models!
+Tested on arm64 MacOS and AWS Sagemaker environments.
+
+Install the [conda](https://anaconda.org/) command line tool and use the following command:
+```shell
+make env
+```
+If running on AWS Sagemaker, install the following libraries with pip:
+- `transformers`
+- `torch`
+- `pytest` 
+
+Next, download necessary data as described in [data/README.md](./data/README.md). To run
+faster unit tests and to check necessary data is downloaded in the right folder, use the following:
+```shell
+make fast-tests
+```
+To only run slower tests that are useful for checking if pipelines are throwing any errors use:
+```shell
+make slow-tests
+```
+To run all unit tests use the following command:
+```shell
+make all-tests
+```
+Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin training and evaluating models!
+
 
 ## Pretraining
 
