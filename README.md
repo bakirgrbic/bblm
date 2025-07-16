@@ -1,7 +1,5 @@
 # bblm
-
-## Description
-A project to better undestand Language Models (LMs), pre-training, finetuning, 
+A project to better undestand Language Models (LMs), pretraining, finetuning, 
 and modifying LMs. Inspired by the [BabyLM Challenge](https://babylm.github.io/index.html).
 
 NOTE:
@@ -10,29 +8,33 @@ This project is still a work in progress.
 
 ## How to Run
 Tested on arm64 MacOS and AWS Sagemaker environments. 
-When running on AWS Sagemaker make sure to install the `transformers` and 
-`torch` libraries. To use any pretrained models from this repository do the following:
-1. Install [git-lfs](https://git-lfs.com/)
-2. Run the following commands to pull the four models
-```shell
-git lfs fetch --all
-```
-```shell
-git lfs checkout
-```
+0. Set up environment
+    - Make sure you have some version of conda and use the following command:
+    ```shell
+    make env
+    ```
+    - If running on AWS Sagemaker, install `transformers` and `torch` libraries using pip. 
+1. Download necessary data as described in [data/README.md](./data/README.md).
+2. Optionally run tests
+    - Use the following to run unit tests and to check data is downloaded and in the right spot.
+    ```shell
+    make fast-tests
+    ```
+    - Use the following to run slower tests that are useful for checking pipelines are not throwing any errors
+    ```shell
+    make slow-tests
+    ```
+3. Use the commands below to begin pretraining or finetuning models!
 
-### Data
-Make sure to download necessary data as described in [data/README.md](./data/README.md).
-
-### Pretraining
+## Pretraining
 
 To pretrain a local model or one from huggingface use the following command:
 ```shell
 python3 -m src.pretrain.py [-h] [-m MODEL_NAME] [-t TOKENIZER_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE]
 ```
 
-### Finetuning
-#### Web of Science (WOS) Text Classification
+## Finetuning
+### Web of Science (WOS) Text Classification
 
 To finetune a local model or one from huggingface use the following command:
 ```shell
