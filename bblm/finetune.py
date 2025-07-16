@@ -6,15 +6,15 @@ import logging
 
 from transformers import AutoTokenizer
 
-from src.tasks.finetuning.web_of_science.wos import (create_dataloaders,
-                                                     load_data, wos_task)
-from utils.log import create_save_dir, setup_logger
+from bblm.tasks.finetuning.web_of_science.wos import (create_dataloaders,
+                                                      load_data, wos_task)
+from utils.log import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:
     """Parser to read cli arguments."""
     parser = argparse.ArgumentParser(
-        prog="python3 -m src.finetune.py",
+        prog="python3 -m bblm.finetune.py",
         description="""Script that finetunes local or huggingface models on
                        the web of science task.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -23,17 +23,9 @@ def get_parser() -> argparse.ArgumentParser:
         "-m",
         "--model_name",
         type=str,
-        default="bsu-slim/electra-tiny",
+        default="bakirgrbic/electra-tiny",
         help="""Name of huggingface model or relative file path
                 of a local model.""",
-    )
-    parser.add_argument(
-        "-t",
-        "--tokenizer_name",
-        type=str,
-        default="bsu-slim/electra-tiny",
-        help="""Name of pre-trained huggingface tokenizer or relative file path
-                to pre-trained local tokenizer. Models should match their tokenizers.""",
     )
     parser.add_argument(
         "-ml",
@@ -77,11 +69,10 @@ def get_args() -> argparse.Namespace:
 args = get_args()
 
 logger = logging.getLogger("main")
-save_dir = create_save_dir(args.model_name)
-setup_logger(logger, save_dir)
+save_dir = setup_logger(logger)
 
-logger.info("Setting up wos finetune task")
-tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_name)
+logger.info("Setting up finetune task")
+tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 train_data, train_labels, test_data, test_labels = load_data()
 training_loader, testing_loader = create_dataloaders(
@@ -95,7 +86,7 @@ training_loader, testing_loader = create_dataloaders(
 )
 
 logger.info(
-    f"Hyperparameters: max_length={args.max_len}, batch_size={args.batch_size}, epochs={args.epochs}, learning_rate={args.learning_rate}"
+    f"Hyperparameters:  model_name={args.model_name}, max_length={args.max_len}, batch_size={args.batch_size}, epochs={args.epochs}, learning_rate={args.learning_rate}"
 )
 wos_task(
     args.model_name,
@@ -104,4 +95,4 @@ wos_task(
     args.epochs,
     args.learning_rate,
 )
-logger.info("End of wos finetune task")
+logger.info("End of finetune task")

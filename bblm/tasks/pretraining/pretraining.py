@@ -1,4 +1,4 @@
-"""Implements BabyLM strict small data track pre-training task."""
+"""Implements BabyLM strict small data track pretraining task."""
 
 import logging
 from pathlib import Path
@@ -9,13 +9,13 @@ import transformers
 from tqdm.auto import tqdm
 from transformers import AutoConfig, AutoModelForMaskedLM
 
-from src.tasks.pretraining.dataset import Dataset
+from bblm.tasks.pretraining.dataset import Dataset
 
 logger = logging.getLogger("main." + __name__)
 
 
 def get_file_names() -> list[str]:
-    """Gathers all pre-training data file names from data/train_10M dir."""
+    """Gathers all pretraining data file names from data/train_10M dir."""
 
     return [
         str(data_file)
@@ -28,7 +28,7 @@ def create_dataset(
     data_files: list[str],
     tokenizer: transformers.AutoTokenizer,
 ) -> torch.utils.data.Dataset:
-    """Create a datalset for pre-training.
+    """Create a datalset for pretraining.
 
     Parameters
     ----------
@@ -50,7 +50,7 @@ def create_dataloader(
     dataset: torch.utils.data.Dataset,
     batch_size: int,
 ) -> torch.utils.data.DataLoader:
-    """Create a dataloader for pre-training.
+    """Create a dataloader for pretraining.
 
     Parameters
     ----------
@@ -62,7 +62,7 @@ def create_dataloader(
     Returns
     -------
     loader
-        Dataloader containing pre-training data.
+        Dataloader containing pretraining data.
 
     """
 
@@ -83,20 +83,20 @@ def pre_train(
     model
         Transformer model to pretrain.
     loader
-        dataloader containing pre-training data.
+        dataloader containing pretraining data.
     optimizer
         Torch optimizer.
     device
         Which hardware device to use.
     epochs
-        Number of epochs to pre-train for.
+        Number of epochs to pretrain for.
     """
 
     for epoch in range(epochs):
         loop = tqdm(loader, leave=True)
         model.train()
         losses = []
-        logger.info(f"Begining pre-train epoch {epoch}")
+        logger.info(f"Begining pretrain epoch {epoch}")
 
         for batch in loop:
             optimizer.zero_grad()
@@ -132,27 +132,27 @@ def pre_train_task(
     learning_rate: float,
     save_dir: Path,
 ) -> None:
-    """Run BabyLM pre-training task and logs artifacts.
+    """Run BabyLM pretraining task and logs artifacts.
 
     Parameters
     ----------
     model_name
         Name of huggingface model or relative file path of a local model.
     loader
-        Torch data loader with pre-training data.
+        Torch data loader with pretraining data.
     epochs
-        Number of epochs to pre-train for.
+        Number of epochs to pretrain for.
     learning_rate
         Learning rate for the optimizer.
     save_dir
-        Directory to save model artifacts to. Log outputs to
-        log/model_name/version_datetime dir.
+        Directory to save model artifacts to.
 
     Returns
     -------
     None
-        Saves model to save_dir.
+        Saves model to save_dir/babylm_pretraining.
     """
+    task_name = "babylm_pretraining"
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     config = AutoConfig.from_pretrained(model_name)
@@ -161,10 +161,14 @@ def pre_train_task(
 
     optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
 
-    logger.info(f"Pre-training start with {device}")
+    logger.info(f"{task_name} start with {device}")
     pre_train(model, loader, optimizer, device, epochs)
-    logger.info("Pre-training done!")
+    logger.info("{task_name} done!")
 
-    logger.info(f"Saving pre-trained model {model_name} to {save_dir}")
+    save_dir = save_dir / Path(task_name)
+    if not save_dir.is_dir():
+        save_dir.mkdir(parents=True)
+
+    logger.info(f"Saving pretrained model {model_name} to {save_dir}")
     model.save_pretrained(save_dir)
     logger.info(f"Saved {model_name}!")

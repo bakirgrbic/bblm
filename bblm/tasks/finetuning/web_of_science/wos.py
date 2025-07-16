@@ -2,7 +2,6 @@
 
 import logging
 from enum import Enum
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -10,8 +9,8 @@ import transformers
 from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 
-from src.tasks.finetuning.web_of_science.auto import AutoClass
-from src.tasks.finetuning.web_of_science.multilabeldataset import \
+from bblm.tasks.finetuning.web_of_science.auto import AutoClass
+from bblm.tasks.finetuning.web_of_science.multilabeldataset import \
     MultiLabelDataset
 
 logger = logging.getLogger("main." + __name__)
@@ -127,7 +126,7 @@ def train(
     Parameters
     ----------
     model
-        Transformer model to pretrain.
+        Transformer model to finetune.
     training_loader
         Train data loader.
     optimizer
@@ -163,7 +162,7 @@ def test(
     Parameters
     ----------
     model
-        Transformer model to pretrain.
+        Transformer model to finetune.
     testing_loader
         Test data loader
     device
@@ -205,7 +204,7 @@ def finetune(
     Parameters
     ----------
     model
-        Transformer model to pretrain.
+        Transformer model to finetune.
     training_loader
         Train data loader.
     testing_loader
@@ -215,7 +214,7 @@ def finetune(
     device
         Which hardware device to use.
     epochs
-        Number of epochs to pre-train for.
+        Number of epochs to finetune for.
     """
 
     for epoch in range(epochs):
@@ -246,7 +245,7 @@ def wos_task(
     testing_loader
         Test data loader.
     epochs
-        Number of epochs to pre-train for.
+        Number of epochs to finetune for.
     learning_rate
         Learning rate for the optimizer.
 
@@ -254,6 +253,7 @@ def wos_task(
     -------
     None
     """
+    task_name = "wos_finetuning"
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     NUM_OUT = len(DocumentTopics)
@@ -263,7 +263,7 @@ def wos_task(
 
     optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
 
-    logger.info(f"Wos finetuning start with {device}")
+    logger.info(f"{task_name} start with {device}")
     finetune(
         model,
         training_loader,
@@ -272,4 +272,4 @@ def wos_task(
         device,
         epochs,
     )
-    logger.info("Wos finetuning done!")
+    logger.info("{task_name} done!")

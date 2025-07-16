@@ -1,4 +1,4 @@
-"""Dataset class for pre-training."""
+"""Dataset class for pretraining."""
 
 from enum import Enum
 
@@ -25,7 +25,7 @@ class Dataset(torch.utils.data.Dataset):
         """Constructor.
 
         Keyword Arguments:
-        paths -- file paths of pre-train data
+        paths -- file paths of pretrain data
         tokenizer -- transformer tokenizer
         """
         self.paths = paths

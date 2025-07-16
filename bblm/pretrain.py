@@ -6,16 +6,16 @@ import logging
 
 from transformers import AutoTokenizer
 
-from src.tasks.pretraining.pretraining import (create_dataloader,
-                                               create_dataset, get_file_names,
-                                               pre_train_task)
-from utils.log import create_save_dir, setup_logger
+from bblm.tasks.pretraining.pretraining import (create_dataloader,
+                                                create_dataset, get_file_names,
+                                                pre_train_task)
+from utils.log import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:
     """Parser to read cli arguments."""
     parser = argparse.ArgumentParser(
-        prog="python3 -m src.pretrain.py",
+        prog="python3 -m bblm.pretrain.py",
         description="""Script that pretrains local or huggingface models.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
@@ -23,17 +23,9 @@ def get_parser() -> argparse.ArgumentParser:
         "-m",
         "--model_name",
         type=str,
-        default="bsu-slim/electra-tiny",
+        default="bakirgrbic/electra-tiny",
         help="""Name of huggingface model or relative file path
                 of a local model.""",
-    )
-    parser.add_argument(
-        "-t",
-        "--tokenizer_name",
-        type=str,
-        default="bsu-slim/electra-tiny",
-        help="""Name of pre-trained huggingface tokenizer or relative file path
-                to pre-trained local tokenizer. Models should match their tokenizers.""",
     )
     parser.add_argument(
         "-bs",
@@ -47,7 +39,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--epochs",
         type=int,
         default=10,
-        help="""Number of epochs to pre-train for.""",
+        help="""Number of epochs to pretrain for.""",
     )
     parser.add_argument(
         "-lr",
@@ -70,18 +62,17 @@ def get_args() -> argparse.Namespace:
 args = get_args()
 
 logger = logging.getLogger("main")
-save_dir = create_save_dir(args.model_name)
-setup_logger(logger, save_dir)
+save_dir = setup_logger(logger)
 
-logger.info("Setting up pre-train task")
-tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_name)
+logger.info("Setting up pretrain task")
+tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 file_names = get_file_names()
 dataset = create_dataset(file_names, tokenizer)
 loader = create_dataloader(dataset, args.batch_size)
 
 logger.info(
-    f"Hyperparameters: batch_size={args.batch_size}, epochs={args.epochs}, learning_rate={args.learning_rate}"
+    f"Hyperparameters: model_name={args.model_name}, batch_size={args.batch_size}, epochs={args.epochs}, learning_rate={args.learning_rate}"
 )
 pre_train_task(
     args.model_name,
@@ -90,4 +81,4 @@ pre_train_task(
     args.learning_rate,
     save_dir=save_dir,
 )
-logger.info("End of pre-train task")
+logger.info("End of pretrain task")

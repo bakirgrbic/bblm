@@ -1,6 +1,6 @@
 [tool.isort]
 src_paths = [
-    "src",
+    "bblm",
     "utils",
 ]
 

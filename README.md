@@ -38,7 +38,7 @@ Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin tra
 
 To pretrain a local model or one from huggingface use the following command:
 ```shell
-python3 -m src.pretrain.py [-h] [-m MODEL_NAME] [-t TOKENIZER_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE]
+python3 -m bblm.pretrain.py [-h] [-m MODEL_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE]
 ```
 
 ## Finetuning
@@ -46,7 +46,7 @@ python3 -m src.pretrain.py [-h] [-m MODEL_NAME] [-t TOKENIZER_NAME] [-bs BATCH_S
 
 To finetune a local model or one from huggingface use the following command:
 ```shell
-python3 -m src.finetune.py [-h] [-m MODEL_NAME] [-t TOKENIZER_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE]
+python3 -m bblm.finetune.py [-h] [-m MODEL_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE]
 ```
 
 ## Acknowledgments

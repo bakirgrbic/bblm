@@ -5,13 +5,13 @@ from transformers import AutoModel
 
 
 class AutoClass(torch.nn.Module):
-    """Auto class for finetuning pre-trained models."""
+    """Auto class for finetuning pretrained models."""
 
     def __init__(self, model_name: str, num_out: int):
         """Constructor.
 
         Keyword Arguments:
-        model_name -- relative file path of pre-trained model or name from
+        model_name -- relative file path of pretrained model or name from
                       huggingface
         num_out -- number of classes to classify
         """

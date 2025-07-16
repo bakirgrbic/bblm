@@ -1,10 +1,10 @@
 import pytest
 from transformers import AutoTokenizer
 
-from src.tasks.finetuning.web_of_science.wos import (create_dataloaders,
-                                                     load_data, wos_task)
+from bblm.tasks.finetuning.web_of_science.wos import (create_dataloaders,
+                                                      load_data, wos_task)
 
-MODEL_NAME = "bsu-slim/electra-tiny"
+MODEL_NAME = "bakirgrbic/electra-tiny"
 
 
 @pytest.fixture
