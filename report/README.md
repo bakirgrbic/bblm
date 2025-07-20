@@ -1,4 +1,4 @@
-# paper
+# report
 This directory contains my NLP class report of electra-tiny-elc. My report is
 not peer reviewed and is included as an artifact for my previous results and
 methods.

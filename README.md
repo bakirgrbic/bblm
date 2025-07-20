@@ -4,7 +4,8 @@ and modifying LMs. Inspired by the [BabyLM Challenge](https://babylm.github.io/i
 
 NOTE:
 This project is still a work in progress.
-- electra-tiny-elc does not work with WOS finetuning task
+- electra-tiny-elc does not work with WOS task
+- other huggingface models such as google-bert/bert-base-uncased do not work with the WOS task
 
 ## How to Run
 Tested on arm64 MacOS and AWS Sagemaker environments.
@@ -50,6 +51,7 @@ python3 -m bblm.finetune.py [-h] [-m MODEL_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] 
 ```
 
 ## Acknowledgments
-Code from [src/models/electra_elc.py](./models/electra_elc.py) is a derivative work
-of [transformers ELECTRA model](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/electra/modeling_electra.py) 
-and [ELC-BERT zero initialization model](https://github.com/ltgoslo/elc-bert/blob/main/models/model_elc_bert_zero.py).
+Code from [bblm/models/electra_tiny_elc.py](./models/electra_elc.py) is a derivative work of the following:
+- the [transformers ELECTRA model](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/electra/modeling_electra.py)
+- the configuration of [bsu-slim/electra-tiny](https://huggingface.co/bsu-slim/electra-tiny)
+- the [ELC-BERT zero initialization model](https://github.com/ltgoslo/elc-bert/blob/main/models/model_elc_bert_zero.py)
