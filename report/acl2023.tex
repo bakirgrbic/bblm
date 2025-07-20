@@ -1,0 +1,326 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+% In particular, the hyperref package requires pdfLaTeX in order to break URLs across lines.
+
+\documentclass[11pt]{article}
+
+% Remove the "review" option to generate the final version.
+\usepackage[]{ACL2023}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For subscripts without math mode
+% \usepackage{fixltx2e}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out.
+% However, it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+\bibliographystyle{acl_natbib}
+
+% If the title and author information does not fit in the area allocated, uncomment the 
+%following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{ELECTRA-ELC: Does Every Layer Count for ELECTRA?}
+
+\author{Bakir Grbic \\ bakirgrbic@u.boisestate.edu}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Most Language models (LMs) that incorporate the transformer architecture \cite{Vaswani2017-kv} make use of uniform transformer layer weighting 
+\cite{charpentier2023layersequallyimportantlayer}. However, results from the ELC-BERT model 
+\cite{charpentier2023layersequallyimportantlayer} show that non-uniform layer weighting can
+yield performance improvements on the BLiMP 
+\cite{warstadt2023blimpbenchmarklinguisticminimal} benchmark. ELECTRA-ELC is a new model
+created by modifying an ELECTRA-tiny model \cite{fields-kennington-2023-exploring} to 
+incorporate zero initialized layer weighting 
+\cite{charpentier2023layersequallyimportantlayer}. Using the data and evaluation methods 
+from the 2024 BabyLM challenge, no significant performance improvements are observed on the 
+BLiMP benchmark in comparison to ELC-BERT and random baselines. Results are inconclusive for the web of science text classification task (WoS)  \cite{kowsari2017HDLTex}.
+
+\end{abstract}
+
+
+\section{Introduction}
+
+Language models using the transformer architecture \cite{Vaswani2017-kv}
+have been shown to perform well on a variety of natural language processing (NLP)
+tasks, especially after being finetuned for task-specific performance \cite{devlin2019bertpretrainingdeepbidirectional}. Pretraining LMs often
+requires large amounts of data and computational resources before they can be effectively used in their downstream finetuned tasks. These aspects of pretraining can be 
+difficult for those with limited compute resources \cite{fields-kennington-2023-exploring} 
+and for languages where available training data is limited
+\cite{samuel2025smalllanguagesbigmodels}. 
+
+Smaller, efficient LMs such as ELECTRA-tiny \cite{fields-kennington-2023-exploring} 
+address reducing pretraining computational needs
+by decreasing the amount of trainable parameters in an ELECTRA LM
+\cite{clark2020electrapretrainingtextencoders}. In addition to increasing accessibility to 
+pretraining with less computational resources, these types of LMs can be useful in addressing
+issues of sample efficiency with limited data such as with the BabyLM challenge
+\cite{charpentier2025babylmturns3papers}.
+
+The goal of this report is to enhance the performance of ELECTRA-tiny by modifying its 
+architecture to incorporate transformer layer weighting as used in ELC-BERT by 
+\citet{charpentier2023layersequallyimportantlayer}. The resulting model, named 
+ELECTRA-ELC\footnote{\url{https://huggingface.co/bakirgrbic/electra-tiny-elc}}, was
+then trained and evaluated using tools provided by the 2024 BabyLM challenge.
+Data used to pretrain this model was from the 
+strict small track of the challenge with a limit of 10M tokens. 
+I evaluated the model on the BLiMP benchmark \cite{warstadt2023blimpbenchmarklinguisticminimal}
+as it was implemented  
+by the 2024 BabyLM evaluation pipeline \footnote{\url{https://github.com/babylm/evaluation-pipeline-2024}}. In addition to BLiMP, 
+WoS was used for 
+evaluation. Preliminary results show minor improvements in BLiMP Filtered and decreases
+in BLiMP Supplement scores. Performance on WoS was not collected for ELECTRA-ELC and 
+ELC-BERT due to time constraints on fixing their errors with the pipeline.
+
+
+\section{Background}
+
+This report builds off the work from \citet{fields-kennington-2023-exploring} and
+\citet{charpentier2023layersequallyimportantlayer} by combining aspects from each model. 
+ELECTRA-ELC's base model of ELECTRA was chosen over BERT not only because ELC-BERT already
+uses BERT but because ELECTRA was created to improve the sample efficiency of BERT by 
+introducing a new pretraining task.
+This new pretraining task allows ELECTRA to take advantage of
+learning more from the data than BERT could by learning from all tokens masked or not.
+\cite{clark2020electrapretrainingtextencoders}.
+
+ELECTRA-tiny was used because it was created to be a smaller, more compute efficient, and
+faster to pretrain LM than
+traditional ELECTRA variants. ELECTRA-tiny accomplished this by reducing its trainable 
+parameters from 110M in ELECTRA-base and 14M in ELECTRA-small
+\cite{clark2020electrapretrainingtextencoders}
+to only about 5.7M parameters \cite{fields-kennington-2023-exploring}. Even with this 
+small parameter size, ELECTRA-tiny can still perform comparably to other distilled LMs with 
+larger
+parameter sizes and without losing too much performance when compared to larger non-distilled LMs \cite{fields-kennington-2023-exploring}.
+
+Transformer layer weighting was chosen compared to other LM modifications because the change
+allowed ELC-BERT to win both the small and strict small tracks of the 2023 BabyLM
+challenge \cite{charpentier2023layersequallyimportantlayer}. Additionally, the change
+would be a relatively simple modification to implement when compared to other more complex
+changes such as GPT-BERT \cite{charpentier2024gptbertboth}. 
+
+ELC-BERT's performance improvement is a result of abandoning the assumption that all
+transformer layer outputs should be weighed the same for future layers \cite{charpentier2023layersequallyimportantlayer}. Instead, ELC-BERT allows itself to 
+determine the weights of each transformer layer's importance \cite{charpentier2023layersequallyimportantlayer}. ELECTRA-ELC uses the zero initialization
+variation from ELC-BERT which was the same variation that won in the strict small track. \cite{charpentier2023layersequallyimportantlayer}.
+
+
+\section{Data}
+
+This section will describe data used for pretraining and evaluation.
+
+\subsection{Training Data}
+
+The data used for pretraining came from the 2024 BabyLM challenge and consists of the following 6 datasets \footnote{\url{https://osf.io/5mk3x}}:
+\begin{itemize}
+    \item British National Corpus Spoken Dialogue \footnote{\url{http://www.natcorp.ox.ac.uk/}}
+    \item CHILDES \cite{childes}
+    \item Gutenberg \cite{gerlach2018standardizedprojectgutenbergcorpus}
+    \item Open Subtitiles \cite{lison-tiedemann-2016-opensubtitles2016}
+    \item Simple Wiki
+    \item Switchboard \cite{stolcke-etal-2000-dialogue}
+\end{itemize}
+The training dataset has a total of 10M tokens where a subset of each of the above 6
+datasets are used. The data contains dialogue texts, 
+stories, and Wikipedia entries that would be realistic for a child to encounter \cite{warstadt2023papersbabylmchallenge}. Although it is not important
+for the report's goal, the data was created this way to better study the way
+humans learn languages and cognitive modeling \cite{warstadt2023papersbabylmchallenge}.
+
+\subsection{Evaluation Data}
+
+I evaluated the model using the BLiMP and WoS tasks. 
+The BLiMP benchmark is a benchmark suite that consists of 67 datasets 
+each with 1,000 pairs of sentences
+\cite{warstadt2023blimpbenchmarklinguisticminimal}. Each sentence pair contains a correct
+and incorrect sentence of different language characteristics such as, but not limited to,
+syntax and semantics \cite{warstadt2023blimpbenchmarklinguisticminimal}. An example of a sentence pair on syntax can be seen in
+Figure~\ref{fig:blimp_ex}. 
+
+\begin{figure}
+    \textbf{Good Sentence:} Who should Derek hug after shocking Richard?
+
+    \textbf{Bad Sentence:} Who should Derek hug Richard after shocking?
+    \caption{An example of BLiMP sentence pair to test for syntax.}
+    \label{fig:blimp_ex}
+\end{figure}
+
+
+The WoS task consists of classifying a given document into seven different topic
+categories. The data used for this report was the Web of Science Dataset WOS-46985
+\cite{kowsari2017HDLTex} which consisted of about 47,000 documents. An example of
+an abbreviated WoS document can be seen in Figure~\ref{fig:wos_ex}.
+
+\begin{figure}
+    \textbf{Document:} (2 + 1)-dimensional non-linear optical waves through the coherently excited resonant medium doped with the erbium atoms can be described by a (2 + 1)-dimensional non-linear Schrodinger equation...
+
+    \textbf{Topic Class:} 0 (label number for Computer Science topic.)
+    \caption{An abbreviated example of WoS data.}
+    \label{fig:wos_ex}
+\end{figure}
+
+
+\section{Methods}
+
+The following steps were taken to pretrain ELECTRA-ELC:
+
+\begin{enumerate}
+    \item Pretraining data for the stict small track was downloaded from the 2024 BabyLM data repository\footnote{\url{https://osf.io/5mk3x}} along with the evaluation data.
+    \item The ELECTRA model from the transformers\footnote{\url{https://huggingface.co/docs/transformers/v4.17.0/en/index}} Python library was modified to implement zero layer weighting.
+    \item An ELECTRA-tiny configuration and corresponding pretrained tokenizer
+were pulled from the Hugging Face Hub\footnote{\url{https://huggingface.co/bsu-slim/electra-tiny}}.
+    \item The configuration and tokenizer were then used by ELECTRA-ELC.
+    \item ELECTRA-ELC was pretrained for 9 epochs, at a learning rate of 1e-4, using the AdamW optimizer and a batch size of 8.
+\end{enumerate}
+No prior pre-processing was done to the pretraining or evaluation data. Pretraining
+and was completed mainly an AWS Sagemaker notebook instance on a ml.g4dn.xlarge 
+machine. Evaluation was also mainly completed 
+using AWS Sagemaker but also on arm64 MacOS.
+No hyperparameter search was done to find optimal hyperparameter values.
+
+
+\section{Evaluation}
+
+In this section, the evaluation methods will be explained.
+
+
+\subsection{Task \& Procedure}
+
+The BLiMP evaluation pipeline was provided by the 2024 BabyLM challenge. The evaluation
+hyperparameters were changed to run only for a single
+epoch and to work with LMs that are masked langauge
+models.
+
+The WoS task was partially provided by the Boise State University (BSU) NLP class. The provided
+task was originally implemented for binary  text classification and later modified to implement
+multi-label text classification to work with WoS. The pretraining pipeline was also provided
+by the BSU NLP class but also needed to be implemented to function properly. Implementing\footnote{\url{https://github.com/bakirgrbic/bblm}}
+both pretraining and WoS tasks required using the PyTorch library\footnote{\url{https://pytorch.org/}}.
+WoS finetuning was completed using a maximum prompt length of 128, a batch size of 64, a learning rate of 2-e5, and on 3 epochs.
+
+\subsection{Metrics and Baselines}
+
+BLiMP can be interpreted as the accuracy of choosing the correct sentence pair. It is
+calculated by averaging the accuracy scores for each of it sub-tasks. WoS is also 
+interpreted by
+accuracy but for correctly classifying a given document to its correct topic.
+
+The random baseline for the BLiMP task is 50\% due to a random model having a probability
+of 50\% from choosing between the correct and incorrect sentence for any given pair. The random baseline for the WoS task is about 14.3\% because there are 7 total document topics
+and choosing randomly for each document would yield a 14.3\% probability of guessing the
+correct topic.
+
+The other baselines used to compare ELECTRA-ELC's performance are ELECTRA-tiny and ELC-BERT.
+ELECTRA-tiny was pretrained using the same pipeline as ELECTRA-ELC and is the same model
+with the exception of lacking layer weighting. 
+This model was used as a baseline since both models only differ by the use of layer weighting
+which would make comparisons in their performance attributable mainly to this difference.
+ELC-BERT was not pretrained and has 24M trainable parameters \cite{charpentier2023layersequallyimportantlayer} which is about 18.3M more parameters than either of the two previous models. This model was included to compare ELCTRA-ELC to a larger
+model with layer weighting.
+
+
+\subsection{Preliminary Results}
+
+\begin{table} 
+    \centering
+    \begin{tabular}{r|c|c|c|c}
+             & \textbf{BLiMP\textsubscript{f}} & \textbf{BLiMP\textsubscript{s}} & \textbf{WoS} & \\
+             \hline
+        ELECTRA-ELC & 51.79 & 47.54 & N/A & \\
+        ELECTRA-tiny & 50.65 & 49.79 & \textbf{76.04} & \\
+        ELC-BERT & \textbf{80.5} & \textbf{67.9} & N/A & \\
+    \end{tabular}
+    \caption{Results for BLiMP and Wos evaluation tasks. Bold text indicates the highest score in the column. N/A indicates that the evaluation technique could not
+    be completed due to errors the model had on the evaluation pipeline. BLiMP\textsubscript{f} is short for BLiMP\textsubscript{filtered} and BLiMP\textsubscript{s} is short for BLiMP\textsubscript{supplemental}}
+    \label{tab:results_table}
+\end{table}
+
+The preliminary results are displayed in Table~\ref{tab:results_table}. 
+ELC-BERT could not be evaluated using the provided BLiMP pipeline nor on the WoS pipeline
+due to errors getting it to work. 
+Its values for BLiMP\textsubscript{f} and BLiMP\textsubscript{s} 
+were taken from Table 2 of \citet{charpentier2023layersequallyimportantlayer}.
+
+ELC-BERT had the highest scores for BLiMP. It had about 
+30\% more performance on BLiMP\textsubscript{f} and about 18\% more on
+BLiMP\textsubscript{s} than either ELECTRA model. 
+Looking only at the ELECTRA models, one can notice that
+ELECTRA-ELC's layer weighting appears to provide a very tiny improvement on the 
+BLiMP\textsubscript{f} task but decreases its performance in 
+BLiMP\textsubscript{s}. ELECTRA-tiny was the only model able to work with the 
+WoS evaluation task.
+
+When comparing either ELECTA model to BLiMP's random baseline, one can see that the
+models very slightly (about 0.5\% to 1.5\%) outperform this baseline for BLiMP\textsubscript{f} but underperform for the random baseline for
+BLiMP\textsubscript{s}. However, ELECTRA-tiny does outperform the random
+baseline for WoS by about 61\%. ELC-BERT clearly outperforms BLiMP's random baselines.
+
+These result go against the assumption that ELECTRA models would be more sample efficient
+when compared to a BERT model. The reason this assumption may not hold is the difference in
+trainable parameters for the ELECTRA and BERT models are not the same. This gives ELC-BERT an advantage as a result and could also explain the poor performance of ELECTRA models in 
+comparison to the random BLiMP baseline. It may also be the case that when trainable 
+parameters are this low that changes to LM architecture, such as layer weighting, may not
+provide as many benefits as they would for a larger model. It could also be the case that
+layer weighting was not implemented correctly resulting in similar performance between the
+ELECTRA models. 
+
+
+\section{Implications}
+
+Based off preliminary results, it appears that layer weighting slightly improves the performance
+of ELECTRA-tiny on the BLiMP benchmark but more results are needed to be conclusive. 
+Neither ELECTRA model greatly
+outperformed the random baseline for BLiMP and may indicate finetuning on BLiMP needs to be run for more epochs in the case of underfitting or that a larger model is required. LMs that push the limit of low trainable parameters such as ELECTRA-tiny may
+not benefit from other architectural changes made to larger models. It is inconclusive whether layer weighting improves performance on WoS due to a lack
+of data.
+
+\section{Conclusion}
+
+By using the 2024 BabyLM data, evaluation pipeline, and WoS task, layer weighting in smaller ELECTRA models appears to not improve performance on downstream tasks when compared to random baselines.
+This result runs counter to
+ELC-BERT and its high performance on the BLiMP task and other tasks not evaluated in this
+report. It may be that ELC-BERT's larger amount of trainable parameters may account for this
+difference in performance.
+
+Future directions for this work would be to finish evaluating ELECTRA-ELC and ELC-BERT on WoS and to reevaluate ELC-BERT on BLiMP. This would require fixing errors for 
+ELECTRA-ELC and ELC-BERT on both evaluation methods as they would not work correctly. 
+Introducing more time intensive evaluation tasks such as GLUE 
+\cite{wang2019gluemultitaskbenchmarkanalysis}
+would be beneficial to more thoroughly evaluate models. GLUE is included in the 2024 BabyLM
+evaluation pipeline.
+
+Defining a more robust way of verifying layer weighting would also be helpful
+in answering whether the modification is properly implemented in ELECTRA-ELC and other 
+models. 
+This would clarify if changes in performance, or the lack thereof, are a result of layer
+weighting not being correctly implemented or some other variable. Lastly, comparing ELC-BERT 
+to a similar sized ELECTRA-ELC model would be interesting because comparisons could also be made to their base versions.
+
+\bibliography{ref}
+
+\end{document}

@@ -1,0 +1,117 @@
+\begin{thebibliography}{16}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Charpentier et~al.(2025)Charpentier, Choshen, Cotterell, Gul, Hu,
+  Jumelet, Linzen, Liu, Mueller, Ross, Shah, Warstadt, Wilcox, and
+  Williams}]{charpentier2025babylmturns3papers}
+Lucas Charpentier, Leshem Choshen, Ryan Cotterell, Mustafa~Omer Gul, Michael
+  Hu, Jaap Jumelet, Tal Linzen, Jing Liu, Aaron Mueller, Candace Ross,
+  Raj~Sanjay Shah, Alex Warstadt, Ethan Wilcox, and Adina Williams. 2025.
+\newblock \href {http://arxiv.org/abs/2502.10645} {Babylm turns 3: Call for
+  papers for the 2025 babylm workshop}.
+
+\bibitem[{Charpentier and
+  Samuel(2023)}]{charpentier2023layersequallyimportantlayer}
+Lucas Georges~Gabriel Charpentier and David Samuel. 2023.
+\newblock \href {http://arxiv.org/abs/2311.02265} {Not all layers are equally
+  as important: Every layer counts bert}.
+
+\bibitem[{Charpentier and Samuel(2024)}]{charpentier2024gptbertboth}
+Lucas Georges~Gabriel Charpentier and David Samuel. 2024.
+\newblock \href {http://arxiv.org/abs/2410.24159} {Gpt or bert: why not both?}
+
+\bibitem[{Clark et~al.(2020)Clark, Luong, Le, and
+  Manning}]{clark2020electrapretrainingtextencoders}
+Kevin Clark, Minh-Thang Luong, Quoc~V. Le, and Christopher~D. Manning. 2020.
+\newblock \href {http://arxiv.org/abs/2003.10555} {Electra: Pre-training text
+  encoders as discriminators rather than generators}.
+
+\bibitem[{Devlin et~al.(2019)Devlin, Chang, Lee, and
+  Toutanova}]{devlin2019bertpretrainingdeepbidirectional}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019.
+\newblock \href {http://arxiv.org/abs/1810.04805} {Bert: Pre-training of deep
+  bidirectional transformers for language understanding}.
+
+\bibitem[{Fields and Kennington(2023)}]{fields-kennington-2023-exploring}
+Clayton Fields and Casey Kennington. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.conll-1.35} {Exploring
+  transformers as compact, data-efficient language models}.
+\newblock In \emph{Proceedings of the 27th Conference on Computational Natural
+  Language Learning (CoNLL)}, pages 521--531, Singapore. Association for
+  Computational Linguistics.
+
+\bibitem[{Gerlach and
+  Font-Clos(2018)}]{gerlach2018standardizedprojectgutenbergcorpus}
+Martin Gerlach and Francesc Font-Clos. 2018.
+\newblock \href {http://arxiv.org/abs/1812.08092} {A standardized project
+  gutenberg corpus for statistical analysis of natural language and
+  quantitative linguistics}.
+
+\bibitem[{Kowsari et~al.(2017)Kowsari, Brown, Heidarysafa, Jafari~Meimandi, ,
+  Gerber, and Barnes}]{kowsari2017HDLTex}
+Kamran Kowsari, Donald~E Brown, Mojtaba Heidarysafa, Kiana Jafari~Meimandi, ,
+  Matthew~S Gerber, and Laura~E Barnes. 2017.
+\newblock Hdltex: Hierarchical deep learning for text classification.
+\newblock In \emph{Machine Learning and Applications (ICMLA), 2017 16th IEEE
+  International Conference on}. IEEE.
+
+\bibitem[{Lison and Tiedemann(2016)}]{lison-tiedemann-2016-opensubtitles2016}
+Pierre Lison and J{\"o}rg Tiedemann. 2016.
+\newblock \href {https://aclanthology.org/L16-1147/} {{O}pen{S}ubtitles2016:
+  Extracting large parallel corpora from movie and {TV} subtitles}.
+\newblock In \emph{Proceedings of the Tenth International Conference on
+  Language Resources and Evaluation ({LREC}`16)}, pages 923--929,
+  Portoro{\v{z}}, Slovenia. European Language Resources Association (ELRA).
+
+\bibitem[{MacWhinney(2000)}]{childes}
+Brian MacWhinney. 2000.
+\newblock \emph{The CHILDES project: The database}, volume~2.
+\newblock Psychology Press.
+
+\bibitem[{Samuel et~al.(2025)Samuel, Mikhailov, Velldal, Øvrelid, Charpentier,
+  Kutuzov, and Oepen}]{samuel2025smalllanguagesbigmodels}
+David Samuel, Vladislav Mikhailov, Erik Velldal, Lilja Øvrelid, Lucas
+  Georges~Gabriel Charpentier, Andrey Kutuzov, and Stephan Oepen. 2025.
+\newblock \href {http://arxiv.org/abs/2412.06484} {Small languages, big models:
+  A study of continual training on languages of norway}.
+
+\bibitem[{Stolcke et~al.(2000)Stolcke, Ries, Coccaro, Shriberg, Bates,
+  Jurafsky, Taylor, Martin, Van Ess-Dykema, and
+  Meteer}]{stolcke-etal-2000-dialogue}
+Andreas Stolcke, Klaus Ries, Noah Coccaro, Elizabeth Shriberg, Rebecca Bates,
+  Daniel Jurafsky, Paul Taylor, Rachel Martin, Carol Van Ess-Dykema, and Marie
+  Meteer. 2000.
+\newblock \href {https://aclanthology.org/J00-3003/} {Dialogue act modeling for
+  automatic tagging and recognition of conversational speech}.
+\newblock \emph{Computational Linguistics}, 26(3):339--374.
+
+\bibitem[{Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones,
+  Gomez, Kaiser, and Polosukhin}]{Vaswani2017-kv}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017.
+\newblock Attention is all you need.
+\newblock \emph{Adv. Neural Inf. Process. Syst.}, 30.
+
+\bibitem[{Wang et~al.(2019)Wang, Singh, Michael, Hill, Levy, and
+  Bowman}]{wang2019gluemultitaskbenchmarkanalysis}
+Alex Wang, Amanpreet Singh, Julian Michael, Felix Hill, Omer Levy, and
+  Samuel~R. Bowman. 2019.
+\newblock \href {http://arxiv.org/abs/1804.07461} {Glue: A multi-task benchmark
+  and analysis platform for natural language understanding}.
+
+\bibitem[{Warstadt et~al.(2023{\natexlab{a}})Warstadt, Choshen, Mueller,
+  Williams, Wilcox, and Zhuang}]{warstadt2023papersbabylmchallenge}
+Alex Warstadt, Leshem Choshen, Aaron Mueller, Adina Williams, Ethan Wilcox, and
+  Chengxu Zhuang. 2023{\natexlab{a}}.
+\newblock \href {http://arxiv.org/abs/2301.11796} {Call for papers -- the
+  babylm challenge: Sample-efficient pretraining on a developmentally plausible
+  corpus}.
+
+\bibitem[{Warstadt et~al.(2023{\natexlab{b}})Warstadt, Parrish, Liu, Mohananey,
+  Peng, Wang, and Bowman}]{warstadt2023blimpbenchmarklinguisticminimal}
+Alex Warstadt, Alicia Parrish, Haokun Liu, Anhad Mohananey, Wei Peng, Sheng-Fu
+  Wang, and Samuel~R. Bowman. 2023{\natexlab{b}}.
+\newblock \href {http://arxiv.org/abs/1912.00582} {Blimp: The benchmark of
+  linguistic minimal pairs for english}.
+
+\end{thebibliography}

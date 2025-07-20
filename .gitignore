@@ -1,7 +1,3 @@
-.DS_Store
-log/
-tmp/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -176,10 +172,24 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# BabyLM data
+# Ignore system files
+.DS_Store
+
+# bblm specifics
+log/
+tmp/
+
+# data
 *.train
 *.test
 *.dev
+*.txt
 
-# wos data
-wos/
+# LaTex files
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
