@@ -51,7 +51,7 @@ python3 -m bblm.finetune.py [-h] [-m MODEL_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] 
 ```
 
 ## Acknowledgments
-Code from [bblm/models/electra_tiny_elc.py](./models/electra_elc.py) is a derivative work of the following:
+Code from [bblm/models/electra_tiny_elc.py](./bblm/models/electra_tiny_elc.py) is a derivative work of the following:
 - the [transformers ELECTRA model](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/electra/modeling_electra.py)
 - the configuration of [bsu-slim/electra-tiny](https://huggingface.co/bsu-slim/electra-tiny)
 - the [ELC-BERT zero initialization model](https://github.com/ltgoslo/elc-bert/blob/main/models/model_elc_bert_zero.py)
