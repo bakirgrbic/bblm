@@ -234,6 +234,7 @@ def wos_task(
     testing_loader: torch.utils.data.DataLoader,
     epochs: int,
     learning_rate: float,
+    device: str = "",
 ) -> None:
     """Run wos finetuing task.
 
@@ -248,13 +249,22 @@ def wos_task(
         Number of epochs to finetune for.
     learning_rate
         Learning rate for the optimizer.
+    device
+        desired hardware to train on. If not specified, gpus are chosen if
+        available.
 
     Returns
     -------
     None
     """
     task_name = "wos_finetuning"
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if not device:
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
 
     NUM_OUT = len(DocumentTopics)
 

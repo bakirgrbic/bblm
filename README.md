@@ -12,7 +12,7 @@ Tested on arm64 MacOS and AWS Sagemaker environments.
 
 Install the [conda](https://anaconda.org/) command line tool and use the following command:
 ```shell
-make env
+conda env create -f environment.yml
 ```
 If running on AWS Sagemaker, install the following libraries with pip:
 - `transformers`
@@ -20,18 +20,15 @@ If running on AWS Sagemaker, install the following libraries with pip:
 - `pytest` 
 
 Next, download necessary data as described in [data/README.md](./data/README.md). To run
-faster unit tests and to check necessary data is downloaded in the right folder, use the following:
+unit tests and smoke tests use the following:
 ```shell
-make fast-tests
+python3 -m pytest -m "not benchmark"
 ```
-To only run slower tests that are useful for checking if pipelines are throwing any errors use:
+To only run slower performance tests use:
 ```shell
-make slow-tests
+python3 -m pytest -m "benchmark"
 ```
-To run all unit tests use the following command:
-```shell
-make all-tests
-```
+
 Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin training and evaluating models!
 
 

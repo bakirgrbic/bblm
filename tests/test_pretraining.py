@@ -23,17 +23,17 @@ class TestPretraining:
     def pt_files(self):
         return get_file_names()
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture()
     def pt_dataset(self, pt_files, tokenizer):
         return create_dataset(pt_files, tokenizer)
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture()
     def small_pt_dataset(self, pt_dataset):
         pt_dataset.decrease_length(self.SMALL_DATASET_LENGTH)
 
         return pt_dataset
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture()
     def small_pt_dataloader(self, small_pt_dataset):
         BATCH_SIZE = 8
 
@@ -74,6 +74,37 @@ class TestPretraining:
             epochs=EPOCHS,
             learning_rate=LEARNING_RATE,
             save_dir=tmp_path,
+        )
+
+    @pytest.mark.parametrize(
+        "device",
+        [
+            pytest.param(
+                "mps",
+                id="mps",
+            ),
+            pytest.param(
+                "cpu",
+                id="cpu",
+            ),
+        ],
+    )
+    @pytest.mark.benchmark
+    def test_pt_task_bench(
+        self, device, small_pt_dataloader, tmp_path, benchmark
+    ):
+        """Not a necessary test but nice to experiment with pytest-benchmark plugin."""
+        EPOCHS = 1
+        LEARNING_RATE = 2e-05
+
+        benchmark(
+            pre_train_task,
+            model_name=MODEL_NAME,
+            loader=small_pt_dataloader,
+            epochs=EPOCHS,
+            learning_rate=LEARNING_RATE,
+            save_dir=tmp_path,
+            device=device,
         )
 
 

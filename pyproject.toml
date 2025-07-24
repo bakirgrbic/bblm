@@ -12,13 +12,13 @@ exclude = [ # Note that this only excludes discovery when using mypy from cli
 ]
 
 [tool.pytest.ini_options]
-addopts = "-v"
 markers = [
     "slow: mark test as slow.",
 ]
 testpaths = [
     "tests",
 ]
+python_files = "test_*.py"
 tmp_path_retention_policy = "none"
 
 [tool.ruff]

@@ -131,6 +131,7 @@ def pre_train_task(
     epochs: int,
     learning_rate: float,
     save_dir: Path,
+    device: str = "",
 ) -> None:
     """Run BabyLM pretraining task and logs artifacts.
 
@@ -146,6 +147,9 @@ def pre_train_task(
         Learning rate for the optimizer.
     save_dir
         Directory to save model artifacts to.
+    device
+        desired hardware to train on. If not specified, gpus are chosen if
+        available.
 
     Returns
     -------
@@ -153,7 +157,13 @@ def pre_train_task(
         Saves model to save_dir/babylm_pretraining.
     """
     task_name = "babylm_pretraining"
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if not device:
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
 
     config = AutoConfig.from_pretrained(model_name)
     model = AutoModelForMaskedLM.from_config(config)

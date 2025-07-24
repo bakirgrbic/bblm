@@ -85,3 +85,35 @@ def test_wos_task_raise_no_error(small_wos_dataloaders):
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
     )
+
+
+@pytest.mark.parametrize(
+    "device",
+    [
+        pytest.param(
+            "mps",
+            id="mps",
+        ),
+        pytest.param(
+            "cpu",
+            id="cpu",
+        ),
+    ],
+)
+@pytest.mark.benchmark
+def test_wos_task_bench(device, small_wos_dataloaders, benchmark):
+    """Not a necessary test but nice to experiment with pytest-benchmark plugin."""
+    TRAIN = 0
+    TEST = 1
+    EPOCHS = 1
+    LEARNING_RATE = 2e-05
+
+    benchmark(
+        wos_task,
+        model_name=MODEL_NAME,
+        training_loader=small_wos_dataloaders[TRAIN],
+        testing_loader=small_wos_dataloaders[TEST],
+        epochs=EPOCHS,
+        learning_rate=LEARNING_RATE,
+        device=device,
+    )
