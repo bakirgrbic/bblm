@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#/usr/bin/env python3
 """Script that pretrains local or huggingface models."""
 
 import argparse
@@ -48,6 +48,13 @@ def get_parser() -> argparse.ArgumentParser:
         default=1e-04,
         help="Learning rate for optimizer.",
     )
+    parser.add_argument(
+        "-d",
+        "--device",
+        type=str,
+        default="",
+        help="Device to train with. If left empty, gpu devices will be prioritized to be used.",
+    )
 
     return parser
 
@@ -80,5 +87,6 @@ pre_train_task(
     args.epochs,
     args.learning_rate,
     save_dir=save_dir,
+    device=args.device
 )
 logger.info("End of pretrain task")

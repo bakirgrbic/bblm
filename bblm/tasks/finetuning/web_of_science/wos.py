@@ -12,6 +12,7 @@ from tqdm.auto import tqdm
 from bblm.tasks.finetuning.web_of_science.auto import AutoClass
 from bblm.tasks.finetuning.web_of_science.multilabeldataset import \
     MultiLabelDataset
+from utils.device import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
 
@@ -258,18 +259,24 @@ def wos_task(
     None
     """
     task_name = "wos_finetuning"
-    if not device:
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
 
     NUM_OUT = len(DocumentTopics)
 
     model = AutoClass(model_name, NUM_OUT)
-    model.to(device)
+
+    if not device:
+        device = auto_choose_device()
+
+    try:
+        model.to(device)
+    except (AssertionError, RuntimeError) as err:
+        old_device = device
+        device = auto_choose_device()
+        logger.error(err)
+        logger.error(
+            f"Could not complete task with {old_device}, but will proceed with {device}"
+        )
+        model.to(device)
 
     optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
 

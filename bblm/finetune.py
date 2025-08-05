@@ -55,6 +55,13 @@ def get_parser() -> argparse.ArgumentParser:
         default=2e-05,
         help="Learning rate for optimizer.",
     )
+    parser.add_argument(
+        "-d",
+        "--device",
+        type=str,
+        default="",
+        help="Device to train with. If left empty, gpu devices will be prioritized to be used.",
+    )
 
     return parser
 
@@ -94,5 +101,6 @@ wos_task(
     testing_loader,
     args.epochs,
     args.learning_rate,
+    args.device,
 )
 logger.info("End of finetune task")

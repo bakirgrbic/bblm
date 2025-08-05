@@ -10,6 +10,7 @@ from tqdm.auto import tqdm
 from transformers import AutoConfig, AutoModelForMaskedLM
 
 from bblm.tasks.pretraining.dataset import Dataset
+from utils.device import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
 
@@ -157,17 +158,23 @@ def pre_train_task(
         Saves model to save_dir/babylm_pretraining.
     """
     task_name = "babylm_pretraining"
-    if not device:
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
 
     config = AutoConfig.from_pretrained(model_name)
     model = AutoModelForMaskedLM.from_config(config)
-    model.to(device)
+
+    if not device:
+        device = auto_choose_device()
+
+    try:
+        model.to(device)
+    except (AssertionError, RuntimeError) as err:
+        old_device = device
+        device = auto_choose_device()
+        logger.error(err)
+        logger.error(
+            f"Could not complete task with {old_device}, but will proceed with {device}"
+        )
+        model.to(device)
 
     optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
 
@@ -176,6 +183,7 @@ def pre_train_task(
     logger.info("{task_name} done!")
 
     save_dir = save_dir / Path(task_name)
+
     if not save_dir.is_dir():
         save_dir.mkdir(parents=True)
 

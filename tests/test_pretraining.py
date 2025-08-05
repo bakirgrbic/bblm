@@ -63,8 +63,26 @@ class TestPretraining:
         dataset = request.getfixturevalue(dataset)
         assert len(dataset) == expected_length
 
-    @pytest.mark.slow
-    def test_pre_train_task_raise_no_error(self, small_pt_dataloader, tmp_path):
+    @pytest.mark.parametrize(
+        "device",
+        [
+            pytest.param(
+                "mps",
+                id="mps",
+            ),
+            pytest.param(
+                "cuda",
+                id="cuda",
+            ),
+            pytest.param(
+                "blah",
+                id="blah",
+            ),
+        ],
+    )
+    def test_pre_train_task_raise_no_error(
+        self, small_pt_dataloader, tmp_path, device
+    ):
         EPOCHS = 1
         LEARNING_RATE = 2e-05
 
@@ -74,6 +92,7 @@ class TestPretraining:
             epochs=EPOCHS,
             learning_rate=LEARNING_RATE,
             save_dir=tmp_path,
+            device=device,
         )
 
     @pytest.mark.parametrize(

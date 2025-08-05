@@ -71,8 +71,24 @@ def test_first_sample_matches_for_train_and_data(wos_data):
     assert test_labels[FIRST_SAMPLE] == EXPECTED_TEST_LABEL
 
 
-@pytest.mark.slow
-def test_wos_task_raise_no_error(small_wos_dataloaders):
+@pytest.mark.parametrize(
+    "device",
+    [
+        pytest.param(
+            "mps",
+            id="mps",
+        ),
+        pytest.param(
+            "cuda",
+            id="cuda",
+        ),
+        pytest.param(
+            "blah",
+            id="blah",
+        ),
+    ],
+)
+def test_wos_task_raise_no_error(small_wos_dataloaders, device):
     TRAIN = 0
     TEST = 1
     EPOCHS = 1
@@ -84,6 +100,7 @@ def test_wos_task_raise_no_error(small_wos_dataloaders):
         testing_loader=small_wos_dataloaders[TEST],
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
+        device=device,
     )
 
 
