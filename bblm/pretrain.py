@@ -89,4 +89,9 @@ pre_train_task(
     save_dir=save_dir,
     device=args.device
 )
+
+logger.info(f"Saving tokenizer for {args.model_name} to {save_dir}")
+tokenizer.save_pretrained(save_dir)
+logger.info(f"Saved tokenizer {args.model_name}!")
+
 logger.info("End of pretrain task")

@@ -73,9 +73,9 @@ def create_dataloader(
 def pre_train(
     model: AutoModelForMaskedLM,
     loader: torch.utils.data.DataLoader,
+    epochs: int,
     optimizer: torch.optim.Adam,
     device: str,
-    epochs: int,
 ) -> None:
     """Run main training loop.
 
@@ -85,23 +85,21 @@ def pre_train(
         Transformer model to pretrain.
     loader
         dataloader containing pretraining data.
+    epochs
+        Number of epochs to pretrain for.
     optimizer
         Torch optimizer.
     device
         Which hardware device to use.
-    epochs
-        Number of epochs to pretrain for.
     """
 
     for epoch in range(epochs):
+        logger.info(f"Begining pretrain epoch {epoch}")
         loop = tqdm(loader, leave=True)
         model.train()
         losses = []
-        logger.info(f"Begining pretrain epoch {epoch}")
 
         for batch in loop:
-            optimizer.zero_grad()
-
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
             labels = batch["labels"].to(device)
@@ -111,17 +109,14 @@ def pre_train(
             )
 
             loss = outputs.loss
-            loss.backward()
 
+            optimizer.zero_grad()
+            loss.backward()
             optimizer.step()
 
             loop.set_description(f"Epoch {epoch}")
             loop.set_postfix(loss=loss.item())
             losses.append(loss.item())
-
-            del input_ids
-            del attention_mask
-            del labels
 
         logger.info(f"Epoch {epoch} Mean Training Loss: {np.mean(losses)}")
 
@@ -179,7 +174,7 @@ def pre_train_task(
     optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
 
     logger.info(f"{task_name} start with {device}")
-    pre_train(model, loader, optimizer, device, epochs)
+    pre_train(model, loader, epochs, optimizer, device)
     logger.info("{task_name} done!")
 
     save_dir = save_dir / Path(task_name)
