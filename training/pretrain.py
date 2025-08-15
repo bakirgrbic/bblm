@@ -1,4 +1,4 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 """Script that pretrains local or huggingface models."""
 
 import argparse
@@ -9,7 +9,7 @@ from transformers import AutoTokenizer
 from bblm.tasks.pretraining.pretraining import (create_dataloader,
                                                 create_dataset, get_file_names,
                                                 pre_train_task)
-from utils.log import setup_logger
+from bblm.utils.log import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -87,7 +87,7 @@ pre_train_task(
     args.epochs,
     args.learning_rate,
     save_dir=save_dir,
-    device=args.device
+    device=args.device,
 )
 
 logger.info(f"Saving tokenizer for {args.model_name} to {save_dir}")

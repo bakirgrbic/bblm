@@ -12,7 +12,7 @@ from tqdm.auto import tqdm
 from bblm.tasks.finetuning.web_of_science.auto import AutoClass
 from bblm.tasks.finetuning.web_of_science.multilabeldataset import \
     MultiLabelDataset
-from utils.device import auto_choose_device
+from bblm.utils.device import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
 

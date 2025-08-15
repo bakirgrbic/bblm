@@ -10,23 +10,25 @@ This project is still a work in progress.
 ## How to Run
 Tested on arm64 MacOS and AWS Sagemaker environments.
 
-Install the [conda](https://anaconda.org/) command line tool and use the following command:
+Install the [conda](https://anaconda.org/) command line tool and use the following commands to simply run finetuning and pretraining scripts:
 ```shell
 conda env create -f environment.yml
+conda activate bblm
 ```
-If running on AWS Sagemaker, install the following libraries with pip:
-- `transformers`
-- `torch`
-- `pytest` 
+
+To run tests and other development tools, install them with the following command:
+```shell
+pip install -e .[dev]
+```
 
 Next, download necessary data as described in [data/README.md](./data/README.md). To run
 unit tests and smoke tests use the following:
 ```shell
-python3 -m pytest -m "not benchmark"
+pytest -m "not benchmark"
 ```
 To only run slower performance tests use:
 ```shell
-python3 -m pytest -m "benchmark"
+pytest -m "benchmark"
 ```
 
 Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin training and evaluating models!
@@ -36,7 +38,7 @@ Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin tra
 
 To pretrain a local model or one from huggingface use the following command:
 ```shell
-python3 -m bblm.pretrain.py [-h] [-m MODEL_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
+./training/pretrain.py [-h] [-m MODEL_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
 ```
 
 ## Finetuning
@@ -44,7 +46,7 @@ python3 -m bblm.pretrain.py [-h] [-m MODEL_NAME] [-bs BATCH_SIZE] [-e EPOCHS] [-
 
 To finetune a local model or one from huggingface use the following command:
 ```shell
-python3 -m bblm.finetune.py [-h] [-m MODEL_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
+./training/finetune.py [-h] [-m MODEL_NAME] [-ml MAX_LEN] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
 ```
 
 ## Acknowledgments

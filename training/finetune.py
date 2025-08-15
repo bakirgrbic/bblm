@@ -8,7 +8,7 @@ from transformers import AutoTokenizer
 
 from bblm.tasks.finetuning.web_of_science.wos import (create_dataloaders,
                                                       load_data, wos_task)
-from utils.log import setup_logger
+from bblm.utils.log import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:
