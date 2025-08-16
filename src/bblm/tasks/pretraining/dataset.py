@@ -7,6 +7,8 @@ import transformers
 
 
 class SpecialTokens(Enum):
+    """Maps special tokenizer tokens to their token type ids."""
+
     PAD = 0
     UNK = 100
     CLS = 101
@@ -80,7 +82,7 @@ class Dataset(torch.utils.data.Dataset):
     def _mask_ids(
         self, input_ids: torch.Tensor, mask_probability: float
     ) -> None:
-        """Masks tokens at random given a probability if they are not special tokens
+        """Masks tokens at random given a probability if they are not special tokens.
 
         Keyword Arguments:
         input_ids -- input_ids from a transformer tokenizer
@@ -97,9 +99,11 @@ class Dataset(torch.utils.data.Dataset):
         input_ids[mask_arr] = SpecialTokens.MASK.value
 
     def get_data(self) -> list[str]:
+        """Returns data."""
         return self.data
 
     def set_data(self, data: list[str]) -> None:
+        """Sets data."""
         self.data = data
 
     def decrease_length(self, new_data_length: int) -> None:

@@ -3,9 +3,12 @@ import torch
 from transformers import AutoTokenizer
 
 from bblm.tasks.pretraining.dataset import SpecialTokens
-from bblm.tasks.pretraining.pretraining import (create_dataloader,
-                                                create_dataset, get_file_names,
-                                                pre_train_task)
+from bblm.tasks.pretraining.pretraining import (
+    create_dataloader,
+    create_dataset,
+    get_file_names,
+    pre_train_task,
+)
 
 MODEL_NAME = "bakirgrbic/electra-tiny"
 

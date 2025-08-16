@@ -2,6 +2,7 @@
 
 import torch
 
+
 def auto_choose_device() -> str:
     """Prioritzes using cuda or mps enabled gpus over cpu devices.
 

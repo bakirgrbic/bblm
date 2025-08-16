@@ -1,5 +1,5 @@
 # bblm
-A project to better undestand Language Models (LMs), pretraining, finetuning, 
+A project to better undestand Language Models (LMs), pretraining, finetuning,
 and modifying LMs. Inspired by the [BabyLM Challenge](https://babylm.github.io/index.html).
 
 NOTE:
@@ -18,7 +18,7 @@ conda activate bblm
 
 To run tests and other development tools, install them with the following command:
 ```shell
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 
 Next, download necessary data as described in [data/README.md](./data/README.md). To run

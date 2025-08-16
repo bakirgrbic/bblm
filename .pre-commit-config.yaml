@@ -1,0 +1,24 @@
+exclude: '^(src/bblm/models/electra_tiny_elc.py|report/)'
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-executables-have-shebangs
+    -   id: check-shebang-scripts-are-executable
+    -   id: check-yaml
+    -   id: check-merge-conflict
+    -   id: check-toml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.10
+    hooks:
+    -   id: ruff-check
+        args: ["--fix"]
+    -   id: ruff-format
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+     -  id: mypy
+        files: src/

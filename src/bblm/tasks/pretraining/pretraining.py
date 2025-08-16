@@ -20,7 +20,6 @@ def get_file_names() -> list[str]:
 
     return [
         str(data_file)
-
         for data_file in Path("data/train_10M").glob("[!._]*.train")
     ]
 

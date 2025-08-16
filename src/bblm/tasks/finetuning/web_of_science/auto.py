@@ -19,7 +19,9 @@ class AutoClass(torch.nn.Module):
         self.transformer_layer = AutoModel.from_pretrained(model_name)
         self.classifier = torch.nn.Linear(196, num_out)
 
-    def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor):
+    def forward(
+        self, input_ids: torch.Tensor, attention_mask: torch.Tensor
+    ) -> torch.Tensor:
         """Runs a piece of tokenized data through the model.
 
         Keyword Arguments:
