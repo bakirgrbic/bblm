@@ -18,7 +18,7 @@ from bblm.utils.log import setup_logger
 def get_parser() -> argparse.ArgumentParser:
     """Parser to read cli arguments."""
     parser = argparse.ArgumentParser(
-        prog="python3 -m bblm.pretrain.py",
+        prog="./training/pretrain.py",
         description="""Script that pretrains local or huggingface models.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
@@ -29,6 +29,13 @@ def get_parser() -> argparse.ArgumentParser:
         default="bakirgrbic/electra-tiny",
         help="""Name of huggingface model or relative file path
                 of a local model.""",
+    )
+    parser.add_argument(
+        "-r",
+        "--revision",
+        type=str,
+        default="main",
+        help="""Specific commit of a model to use from huggingface.""",
     )
     parser.add_argument(
         "-bs",
@@ -75,7 +82,9 @@ logger = logging.getLogger("main")
 save_dir = setup_logger(logger)
 
 logger.info("Setting up pretrain task")
-tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+tokenizer = AutoTokenizer.from_pretrained(
+    args.model_name, revision=args.revision
+)
 
 file_names = get_file_names()
 dataset = create_dataset(file_names, tokenizer)
@@ -86,11 +95,12 @@ logger.info(
 )
 pre_train_task(
     args.model_name,
+    args.revision,
     loader,
     args.epochs,
     args.learning_rate,
-    save_dir=save_dir,
-    device=args.device,
+    save_dir,
+    args.device,
 )
 
 logger.info(f"Saving tokenizer for {args.model_name} to {save_dir}")

@@ -7,16 +7,22 @@ from transformers import AutoModel
 class AutoClass(torch.nn.Module):
     """Auto class for finetuning pretrained models."""
 
-    def __init__(self, model_name: str, num_out: int):
+    def __init__(self, model_name: str, revision: str, num_out: int) -> None:
         """Constructor.
 
-        Keyword Arguments:
-        model_name -- relative file path of pretrained model or name from
-                      huggingface
-        num_out -- number of classes to classify
+        Parameters
+        ----------
+        model_name
+            relative file path of pretrained model or name from huggingface
+        revision
+            the specific commit of a model to use from huggingface.
+        num_out
+            number of classes to classify
         """
         super().__init__()
-        self.transformer_layer = AutoModel.from_pretrained(model_name)
+        self.transformer_layer = AutoModel.from_pretrained(
+            model_name, revision=revision
+        )
         self.classifier = torch.nn.Linear(196, num_out)
 
     def forward(
@@ -24,11 +30,16 @@ class AutoClass(torch.nn.Module):
     ) -> torch.Tensor:
         """Runs a piece of tokenized data through the model.
 
-        Keyword Arguments:
-        input_ids -- input_ids from a transformer tokenizer
-        attention_mask -- attention mask for input_ids from transformer tokenizer
+        Parameters
+        ----------
+        input_ids
+            input_ids from a transformer tokenizer
+        attention_mask
+            attention mask for input_ids from transformer tokenizer
 
-        Returns the softmax distribution for all classes
+        Returns
+        -------
+        the softmax distribution for all classes
         """
         output_transformer = self.transformer_layer(
             input_ids=input_ids, attention_mask=attention_mask

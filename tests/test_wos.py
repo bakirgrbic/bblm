@@ -99,6 +99,7 @@ def test_wos_task_raise_no_error(small_wos_dataloaders, device):
 
     wos_task(
         model_name=MODEL_NAME,
+        revision="main",
         training_loader=small_wos_dataloaders[TRAIN],
         testing_loader=small_wos_dataloaders[TEST],
         epochs=EPOCHS,
@@ -131,6 +132,7 @@ def test_wos_task_bench(device, small_wos_dataloaders, benchmark):
     benchmark(
         wos_task,
         model_name=MODEL_NAME,
+        revision="main",
         training_loader=small_wos_dataloaders[TRAIN],
         testing_loader=small_wos_dataloaders[TEST],
         epochs=EPOCHS,

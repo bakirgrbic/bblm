@@ -232,17 +232,20 @@ def finetune(
 
 def wos_task(
     model_name: str,
+    revision: str,
     training_loader: torch.utils.data.DataLoader,
     testing_loader: torch.utils.data.DataLoader,
     epochs: int,
     learning_rate: float,
-    device: str = "",
+    device: str,
 ) -> None:
     """Run wos finetuing task.
 
     Keyword Arguments:
     model_name
         Name of huggingface model or relative file path of a local model.
+    revision
+        the specific commit of a model to use from huggingface.
     training_loader
         Train data loader.
     testing_loader
@@ -263,7 +266,7 @@ def wos_task(
 
     NUM_OUT = len(DocumentTopics)
 
-    model = AutoClass(model_name, NUM_OUT)
+    model = AutoClass(model_name, revision, NUM_OUT)
 
     if not device:
         device = auto_choose_device()

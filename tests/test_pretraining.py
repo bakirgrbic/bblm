@@ -91,6 +91,7 @@ class TestPretraining:
 
         pre_train_task(
             model_name=MODEL_NAME,
+            revision="main",
             loader=small_pt_dataloader,
             epochs=EPOCHS,
             learning_rate=LEARNING_RATE,
@@ -122,6 +123,7 @@ class TestPretraining:
         benchmark(
             pre_train_task,
             model_name=MODEL_NAME,
+            revision="main",
             loader=small_pt_dataloader,
             epochs=EPOCHS,
             learning_rate=LEARNING_RATE,

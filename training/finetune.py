@@ -17,7 +17,7 @@ from bblm.utils.log import setup_logger
 def get_parser() -> argparse.ArgumentParser:
     """Parser to read cli arguments."""
     parser = argparse.ArgumentParser(
-        prog="python3 -m bblm.finetune.py",
+        prog="./training/finetune.py",
         description="""Script that finetunes local or huggingface models on
                        the web of science task.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -29,6 +29,13 @@ def get_parser() -> argparse.ArgumentParser:
         default="bakirgrbic/electra-tiny",
         help="""Name of huggingface model or relative file path
                 of a local model.""",
+    )
+    parser.add_argument(
+        "-r",
+        "--revision",
+        type=str,
+        default="main",
+        help="""Specific commit of a model to use from huggingface.""",
     )
     parser.add_argument(
         "-ml",
@@ -82,7 +89,9 @@ logger = logging.getLogger("main")
 save_dir = setup_logger(logger)
 
 logger.info("Setting up finetune task")
-tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+tokenizer = AutoTokenizer.from_pretrained(
+    args.model_name, revision=args.revision
+)
 
 train_data, train_labels, test_data, test_labels = load_data()
 training_loader, testing_loader = create_dataloaders(
@@ -100,6 +109,7 @@ logger.info(
 )
 wos_task(
     args.model_name,
+    args.revision,
     training_loader,
     testing_loader,
     args.epochs,

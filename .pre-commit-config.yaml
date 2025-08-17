@@ -1,4 +1,5 @@
 exclude: '^(src/bblm/models/electra_tiny_elc.py|report/)'
+
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -14,7 +15,7 @@ repos:
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.10
     hooks:
-    -   id: ruff-check
+    -   id: ruff
         args: ["--fix"]
     -   id: ruff-format
 -   repo: https://github.com/pre-commit/mirrors-mypy
@@ -22,3 +23,10 @@ repos:
     hooks:
      -  id: mypy
         files: src/
+-   repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+    -   id: bandit
+        args: ["-c", "pyproject.toml"]
+        stages: [manual]
+        exclude: ^tests/

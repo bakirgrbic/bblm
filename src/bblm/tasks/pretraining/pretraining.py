@@ -122,11 +122,12 @@ def pre_train(
 
 def pre_train_task(
     model_name: str,
+    revision: str,
     loader: torch.utils.data.DataLoader,
     epochs: int,
     learning_rate: float,
     save_dir: Path,
-    device: str = "",
+    device: str,
 ) -> None:
     """Run BabyLM pretraining task and logs artifacts.
 
@@ -134,6 +135,8 @@ def pre_train_task(
     ----------
     model_name
         Name of huggingface model or relative file path of a local model.
+    revision
+        the specific commit of a model to use from huggingface.
     loader
         Torch data loader with pretraining data.
     epochs
@@ -153,7 +156,7 @@ def pre_train_task(
     """
     task_name = "babylm_pretraining"
 
-    config = AutoConfig.from_pretrained(model_name)
+    config = AutoConfig.from_pretrained(model_name, revision=revision)
     model = AutoModelForMaskedLM.from_config(config)
 
     if not device:
