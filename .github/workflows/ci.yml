@@ -16,7 +16,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment.yml
-          activate-environment:  bblm
+          activate-environment: bblm
           cache: true
 
       - name: Install local package and dev tools
