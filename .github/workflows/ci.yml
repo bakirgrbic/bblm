@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment:  bblm
+          cache: true
+
+      - name: Install local package and dev tools
+        shell: bash -l {0}
+        run: |
+          pip install -e .[dev]
+
+      - name: Run pre-commit checks
+        shell: bash -l {0}
+        run: |
+          pre-commit run --all-files
+
+      - name: Run Bandit security scan and save report
+        shell: bash -l {0}
+        run: pre-commit run --hook-stage manual bandit --all-files > bandit-report.txt
+
+      - name: Upload Bandit report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-security-report
+          path: bandit-report.txt
+
+      - name: Run unit tests and save report
+        shell: bash -l {0}
+        run: >
+          pytest -m "not benchmark"
+          --html=pytest-report.html
+          --self-contained-html
+
+      - name: Upload pytest report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-test-report
+          path: pytest-report.html
