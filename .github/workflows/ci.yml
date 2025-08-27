@@ -5,9 +5,18 @@ permissions:
 
 on: pull_request
 
+
 jobs:
-  setup-env-and-cache:
+
+  lint-test-scan:
     runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    permissions:
+      contents: write
+      security-events: write
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -16,43 +25,13 @@ jobs:
         with:
           environment-file: environment.yml
           activate-environment: bblm
-          cache: true
       - name: Install local package and dev tools
-        shell: bash -l {0}
         run: |
           pip install -e .[dev]
-
-  linting:
-    runs-on: macos-latest
-    needs: setup-env-and-cache
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Restore cached conda environment
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: bblm
-          cache: true
       - name: Run pre-commit linting checks
-        shell: bash -l {0}
         run: |
           pre-commit run --all-files
-
-  testing:
-    runs-on: macos-latest
-    permissions:
-      contents: write
-    needs: setup-env-and-cache
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Restore cached conda environment
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: bblm
-          cache: true
       - name: Run unit tests and generate report
-        shell: bash -l {0}
         run: >
           pytest -m "not benchmark"
           --html=pytest-report.html
@@ -63,20 +42,6 @@ jobs:
         with:
           name: pytest-test-report
           path: pytest-report.html
-
-  security-scanning:
-    runs-on: macos-latest
-    permissions:
-      security-events: write
-    needs: setup-env-and-cache
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Restore cached conda environment
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: bblm
-          cache: true
       - name: Perform Bandit Analysis
         uses: PyCQA/bandit-action@v1
         with:
