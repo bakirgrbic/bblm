@@ -62,3 +62,14 @@ Code from [bblm/models/electra_tiny_elc.py](./bblm/models/electra_tiny_elc.py) i
 - the [transformers ELECTRA model](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/electra/modeling_electra.py)
 - the configuration of [bsu-slim/electra-tiny](https://huggingface.co/bsu-slim/electra-tiny)
 - the [ELC-BERT zero initialization model](https://github.com/ltgoslo/elc-bert/blob/main/models/model_elc_bert_zero.py)
+
+### Data
+#### train_10M
+Data used to pretrain models from the
+[BabyLM 2024 data repository](https://osf.io/5mk3x).
+
+#### wos
+Web of Science (WOS) text classification data used to fine-tune
+and evaluate models. Specifically, the
+[Web of Science Dataset WOS-46985](https://data.mendeley.com/datasets/9rw3vkcfy4/6)
+data.

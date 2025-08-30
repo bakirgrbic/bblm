@@ -237,6 +237,7 @@ dependencies:
       - mypy-extensions==1.1.0
       - nltk==3.9.1
       - numpy==1.26.4
+      - osfclient==0.0.5
       - pandas==2.2.0
       - pathvalidate==3.2.3
       - peft==0.15.2
