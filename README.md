@@ -5,8 +5,8 @@ and modifying LMs. Inspired by the [BabyLM Challenge](https://babylm.github.io/i
 NOTE:
 * Use huggingface models you trust. When possible specify the exact revision number for the model you are using.
 This project is still a work in progress.
-- electra-tiny-elc does not work with WOS task
-- other huggingface models such as google-bert/bert-base-uncased do not work with the WOS task
+- electra-tiny-elc does not work with WoS task
+- other huggingface models such as google-bert/bert-base-uncased do not work with the WoS task
 
 ## How to Run
 Tested on arm64 MacOS and AWS Sagemaker environments.
@@ -18,14 +18,21 @@ conda activate bblm
 pip install .
 ```
 
+### Install Data
+Install the BabyLM 2024 training data and the Web of Science (WoS) using the following:
+```shell
+./src/bblm/cli/download_data.py
+```
+This is necessary for both running integration tests and using the training scripts.
+
+
 ### Running Tests
 To run tests and other development tools, install them with the following command:
 ```shell
 pip install -e ".[dev]"
 ```
 
-Next, download necessary data as described in [data/README.md](./data/README.md). To run
-unit tests and smoke tests use the following:
+To run unit tests and integration tests use the following:
 ```shell
 pytest -m "not benchmark"
 ```
@@ -39,19 +46,19 @@ To run bandit locally on all files use the following command:
 pre-commit run --hook-stage manual bandit --all-files
 ```
 
-Proceed to [pretraining](#pretraining) or [finetuning](#finetuning) to begin training and evaluating models!
+Proceed to [Pretraining](#pretraining) or [WoS Text Classification](#WoS Text Classification) to begin training and evaluating models!
 
+
+## Training
+Make sure to install data as described in [Install Data](#install data)
 
 ## Pretraining
-
 To pretrain a local model or one from huggingface use the following command:
 ```shell
 ./training/pretrain.py [-h] [-m MODEL_NAME] [-r REVISION] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
 ```
 
-## Finetuning
-### Web of Science (WOS) Text Classification
-
+## WoS Text Classification
 To finetune a local model or one from huggingface use the following command:
 ```shell
 ./training/finetune.py [-h] [-m MODEL_NAME] [-r REVISION] [-ml MAX_LEN] [-bs BATCH_SIZE] [-e EPOCHS] [-lr LEARNING_RATE] [-d DEVICE]
@@ -69,7 +76,7 @@ Data used to pretrain models from the
 [BabyLM 2024 data repository](https://osf.io/5mk3x).
 
 #### wos
-Web of Science (WOS) text classification data used to fine-tune
+Web of Science text classification data used to fine-tune
 and evaluate models. Specifically, the
 [Web of Science Dataset WOS-46985](https://data.mendeley.com/datasets/9rw3vkcfy4/6)
-data.
+data. Also found on [huggingface](https://huggingface.co/datasets/bakirgrbic/web-of-science).

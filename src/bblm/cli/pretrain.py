@@ -79,7 +79,7 @@ def get_args() -> argparse.Namespace:
 args = get_args()
 
 logger = logging.getLogger("main")
-save_dir = setup_logger(logger)
+save_dir = setup_logger(__file__, logger)
 
 logger.info("Setting up pretrain task")
 tokenizer = AutoTokenizer.from_pretrained(

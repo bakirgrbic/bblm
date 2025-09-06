@@ -26,7 +26,7 @@ exclude = [ # Note that this only excludes discovery when using mypy from cli
 
 [tool.pytest.ini_options]
 markers = [
-    "slow: mark test as slow.",
+    "integration: mark test as integration tests (slow, may require network or assumes data is present in project).",
 ]
 testpaths = [
     "tests",

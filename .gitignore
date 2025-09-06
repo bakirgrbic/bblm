@@ -178,6 +178,7 @@ cython_debug/
 # bblm specifics
 log/
 tmp/
+notebooks/
 
 # data
 *.train

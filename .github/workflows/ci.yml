@@ -31,7 +31,10 @@ jobs:
       - name: Run pre-commit linting checks
         run: |
           pre-commit run --all-files
-      - name: Run unit tests and generate report
+      - name: Download data to run integration tests
+        run: >
+          ./src/bblm/cli/download_data.py
+      - name: Run tests and generate report
         run: >
           pytest -m "not benchmark"
           --html=pytest-report.html

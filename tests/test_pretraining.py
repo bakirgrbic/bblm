@@ -83,6 +83,7 @@ class TestPretraining:
             ),
         ],
     )
+    @pytest.mark.integration
     def test_pre_train_task_raise_no_error(
         self, small_pt_dataloader, tmp_path, device
     ):
