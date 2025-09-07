@@ -46,11 +46,11 @@ To run bandit locally on all files use the following command:
 pre-commit run --hook-stage manual bandit --all-files
 ```
 
-Proceed to [Pretraining](#pretraining) or [WoS Text Classification](#WoS Text Classification) to begin training and evaluating models!
+Proceed to [Pretraining](#pretraining) or [WoS Text Classification](#wos-text-classification) to begin training and evaluating models!
 
 
 ## Training
-Make sure to install data as described in [Install Data](#install data)
+Make sure to install data as described in [Install Data](#install-data)
 
 ## Pretraining
 To pretrain a local model or one from huggingface use the following command:
