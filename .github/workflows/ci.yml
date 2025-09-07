@@ -52,9 +52,8 @@ jobs:
           name: pytest-test-report
           path: pytest-report.html
 
-      - name: Perform Bandit Analysis
+      - name: Run Bandit
         uses: PyCQA/bandit-action@v1
         with:
-          extras: toml
-          configfile: pyproject.toml
-          exclude: src/bblm/models/electra_tiny_elc.py
+          configfile: ./pyproject.toml
+          exclude: ./src/bblm/models/electra_tiny_elc.py
