@@ -53,7 +53,5 @@ jobs:
           path: pytest-report.html
 
       - name: Run Bandit
-        uses: PyCQA/bandit-action@v1
-        with:
-          configfile: ./pyproject.toml
-          exclude: ./src/bblm/models/electra_tiny_elc.py
+        run: |
+          bandit --configfile pyproject.toml --recursive src
