@@ -12,12 +12,15 @@ from bblm.utils.log import find_parent_path
 def download_wos(current_dir: str) -> None:
     """Gets web of science data from huggingface."""
     print("Creating data/wos/ dir")
-
     project_root_dir = find_parent_path(current_dir)
     save_dir = project_root_dir / "data" / "wos"
 
-    if not save_dir.is_dir():
-        save_dir.mkdir(parents=True)
+    if save_dir.is_dir():
+        print("""data/wos/ dir exists, assuming data has already been downloaded.
+                 Please delete this dir to download any new data.""")
+        return
+
+    save_dir.mkdir(parents=True)
 
     print("Downloading wos data")
 
@@ -33,6 +36,7 @@ def download_wos(current_dir: str) -> None:
 
 def download_bblm(current_dir: str) -> None:
     """Gets BabyLM challenge data for the 10M track."""
+    print("Getting data for data/train_10M/ dir")
     BABYLM_PROJECT_ID = "ad7qg"
     TARGET_ZIP = "train_10M.zip"
 
@@ -40,7 +44,13 @@ def download_bblm(current_dir: str) -> None:
     save_dir = project_root_dir / "data"
     zip_file = save_dir / TARGET_ZIP
 
-    if not save_dir.is_dir():
+    if (save_dir / "train_10M").is_dir():
+        print("""data/train_10M/ dir exists, assuming data has already been
+                 downloaded. Please delete this dir to download any new data.""")
+        return
+    elif (
+        not save_dir.is_dir()
+    ):  # Can't assume this exists beforehand for unit tests
         save_dir.mkdir(parents=True)
 
     # Connect to osf project that has babylm 2024 data
@@ -57,6 +67,7 @@ def download_bblm(current_dir: str) -> None:
                         file.write_to(f)
                 except Exception as e:
                     print(f"Failed to download {file.name}. Error {e}")
+
                     return
 
                 break  # currently only need one zip
