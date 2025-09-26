@@ -48,8 +48,10 @@ def download_bblm(current_dir: str) -> None:
         print("""data/train_10M/ dir exists, assuming data has already been
                  downloaded. Please delete this dir to download any new data.""")
         return
-
-    save_dir.mkdir(parents=True)
+    elif (
+        not save_dir.is_dir()
+    ):  # Can't assume this exists beforehand for unit tests
+        save_dir.mkdir(parents=True)
 
     # Connect to osf project that has babylm 2024 data
     osf = osfclient.OSF()
