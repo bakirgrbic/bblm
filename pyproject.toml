@@ -47,6 +47,7 @@ select = [
     "D",
     "I",
 ]
+# The following would not play nice with code I reused for electra_tiny_elc.py
 ignore = [
     "D101",
     "D102",
