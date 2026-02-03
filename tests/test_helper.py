@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from bblm.utils.log import find_parent_path, setup_logger
+from bblm.utils import find_parent_path, setup_logger
 
 
 @pytest.mark.parametrize(

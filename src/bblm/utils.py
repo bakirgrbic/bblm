@@ -1,9 +1,11 @@
-"""Helper method for logging."""
+"""Helper method for logging and auto choosing devices."""
 
 import datetime
 import logging
 import sys
 from pathlib import Path
+
+import torch
 
 
 def setup_logger(current_dir: str, logger: logging.Logger) -> Path:
@@ -70,3 +72,18 @@ def find_parent_path(current_dir: str, target: str = ".git") -> Path:
             return parent
 
     raise FileNotFoundError(f"Could not find {target}")
+
+
+def auto_choose_device() -> str:
+    """Prioritzes using cuda or mps enabled gpus over cpu devices.
+
+    Note that there are many more choices for devices to train with
+    """
+    device = "cpu"
+
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.mps.is_available():
+        device = "mps"
+
+    return device

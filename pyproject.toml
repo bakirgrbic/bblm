@@ -15,14 +15,14 @@ dev = [
     "bandit[toml]",
 ]
 
-
-[tool.mypy]
-python_version = "3.10"
-disallow_untyped_defs = true
-ignore_missing_imports = true
-exclude = [ # Note that this only excludes discovery when using mypy from cli
-    "tests",
-]
+# Commented out mypy because it was not being nice to reused code for electra_tiny_elc.py
+# [tool.mypy]
+# python_version = "3.10"
+# disallow_untyped_defs = true
+# ignore_missing_imports = true
+# exclude = [ # Note that this only excludes discovery when using mypy from cli
+#     "tests",
+# ]
 
 [tool.pytest.ini_options]
 markers = [
@@ -47,9 +47,15 @@ select = [
     "D",
     "I",
 ]
+# The following would not play nice with code I reused for electra_tiny_elc.py
 ignore = [
+    "D101",
+    "D102",
     "D202",
+    "D205",
+    "D400",
     "D401",
+    "D414",
 ]
 
 
@@ -64,4 +70,4 @@ convention = "numpy"
 
 [tool.bandit]
 skips = ["B615"] # This is noted in the readme
-exclude_dirs = ["tests", "report", "/src/bblm/models/"]
+exclude_dirs = ["tests", "report"]

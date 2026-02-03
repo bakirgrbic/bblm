@@ -9,8 +9,8 @@ import transformers
 from tqdm.auto import tqdm
 from transformers import AutoConfig, AutoModelForMaskedLM
 
-from bblm.tasks.pretraining.dataset import Dataset
-from bblm.utils.device import auto_choose_device
+from bblm.dataset import Dataset
+from bblm.utils import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
 

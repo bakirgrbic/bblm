@@ -6,7 +6,7 @@ import zipfile
 import osfclient
 from huggingface_hub import snapshot_download
 
-from bblm.utils.log import find_parent_path
+from bblm.utils import find_parent_path
 
 
 def download_wos(current_dir: str) -> None:

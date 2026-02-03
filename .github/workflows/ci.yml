@@ -41,7 +41,7 @@ jobs:
 
       - name: Download data to run integration tests
         run: >
-          ./src/bblm/cli/download_data.py
+          ./src/bblm/download_data.py
 
       - name: Run tests and generate report
         run: >
