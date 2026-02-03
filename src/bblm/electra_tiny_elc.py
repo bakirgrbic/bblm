@@ -102,11 +102,13 @@ def load_tf_weights_in_electra(
     init_vars = tf.train.list_variables(tf_path)
     names = []
     arrays = []
+
     for name, shape in init_vars:
         logger.info(f"Loading TF weight {name} with shape {shape}")
         array = tf.train.load_variable(tf_path, name)
         names.append(name)
         arrays.append(array)
+
     for name, array in zip(names, arrays):
         original_name: str = name
 
@@ -129,15 +131,19 @@ def load_tf_weights_in_electra(
             # print(original_name, name)
             # adam_v and adam_m are variables used in AdamWeightDecayOptimizer to calculated m and v
             # which are not required for using pretrained model
+
             if any(n in ["global_step", "temperature"] for n in name):
                 logger.info(f"Skipping {original_name}")
+
                 continue
             pointer = model
+
             for m_name in name:
                 if re.fullmatch(r"[A-Za-z]+_\d+", m_name):
                     scope_names = re.split(r"_(\d+)", m_name)
                 else:
                     scope_names = [m_name]
+
                 if scope_names[0] == "kernel" or scope_names[0] == "gamma":
                     pointer = getattr(pointer, "weight")
                 elif (
@@ -150,9 +156,11 @@ def load_tf_weights_in_electra(
                     pointer = getattr(pointer, "classifier")
                 else:
                     pointer = getattr(pointer, scope_names[0])
+
                 if len(scope_names) >= 2:
                     num = int(scope_names[1])
                     pointer = pointer[num]
+
             if m_name.endswith("_embeddings"):
                 pointer = getattr(pointer, "weight")
             elif m_name == "kernel":
@@ -169,7 +177,9 @@ def load_tf_weights_in_electra(
             pointer.data = torch.from_numpy(array)
         except AttributeError as e:
             print(f"Skipping {original_name}", name, e)
+
             continue
+
     return model
 
 
@@ -236,6 +246,7 @@ class ElectraEmbeddings(nn.Module):
         # Setting the token_type_ids to the registered buffer in constructor where it is all zeros, which usually occurs
         # when its auto-generated, registered buffer helps users when tracing the model without passing token_type_ids, solves
         # issue #5664
+
         if token_type_ids is None:
             if hasattr(self, "token_type_ids"):
                 buffered_token_type_ids = self.token_type_ids[:, :seq_length]
@@ -255,11 +266,13 @@ class ElectraEmbeddings(nn.Module):
         token_type_embeddings = self.token_type_embeddings(token_type_ids)
 
         embeddings = inputs_embeds + token_type_embeddings
+
         if self.position_embedding_type == "absolute":
             position_embeddings = self.position_embeddings(position_ids)
             embeddings += position_embeddings
         embeddings = self.LayerNorm(embeddings)
         embeddings = self.dropout(embeddings)
+
         return embeddings
 
 
@@ -267,6 +280,7 @@ class ElectraEmbeddings(nn.Module):
 class ElectraSelfAttention(nn.Module):
     def __init__(self, config, position_embedding_type=None):
         super().__init__()
+
         if config.hidden_size % config.num_attention_heads != 0 and not hasattr(
             config, "embedding_size"
         ):
@@ -289,6 +303,7 @@ class ElectraSelfAttention(nn.Module):
         self.position_embedding_type = position_embedding_type or getattr(
             config, "position_embedding_type", "absolute"
         )
+
         if (
             self.position_embedding_type == "relative_key"
             or self.position_embedding_type == "relative_key_query"
@@ -306,6 +321,7 @@ class ElectraSelfAttention(nn.Module):
             self.attention_head_size,
         )
         x = x.view(new_x_shape)
+
         return x.permute(0, 2, 1, 3)
 
     def forward(
@@ -350,6 +366,7 @@ class ElectraSelfAttention(nn.Module):
         query_layer = self.transpose_for_scores(mixed_query_layer)
 
         use_cache = past_key_value is not None
+
         if self.is_decoder:
             # if cross_attention save Tuple(torch.Tensor, torch.Tensor) of all cross attention key/value_states.
             # Further calls to cross_attention layer can then reuse all cross-attention
@@ -370,6 +387,7 @@ class ElectraSelfAttention(nn.Module):
             or self.position_embedding_type == "relative_key_query"
         ):
             query_length, key_length = query_layer.shape[2], key_layer.shape[2]
+
             if use_cache:
                 position_ids_l = torch.tensor(
                     key_length - 1,
@@ -413,6 +431,7 @@ class ElectraSelfAttention(nn.Module):
         attention_scores = attention_scores / math.sqrt(
             self.attention_head_size
         )
+
         if attention_mask is not None:
             # Apply the attention mask is (precomputed for all layers in ElectraModel forward() function)
             attention_scores = attention_scores + attention_mask
@@ -425,6 +444,7 @@ class ElectraSelfAttention(nn.Module):
         attention_probs = self.dropout(attention_probs)
 
         # Mask heads if we want to
+
         if head_mask is not None:
             attention_probs = attention_probs * head_mask
 
@@ -444,6 +464,7 @@ class ElectraSelfAttention(nn.Module):
 
         if self.is_decoder:
             outputs = outputs + (past_key_value,)
+
         return outputs
 
 
@@ -463,6 +484,7 @@ class ElectraSelfOutput(nn.Module):
         hidden_states = self.dense(hidden_states)
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
+
         return hidden_states
 
 
@@ -529,6 +551,7 @@ class ElectraAttention(nn.Module):
         outputs = (attention_output,) + self_outputs[
             1:
         ]  # add attentions if we output them
+
         return outputs
 
 
@@ -537,6 +560,7 @@ class ElectraIntermediate(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.dense = nn.Linear(config.hidden_size, config.intermediate_size)
+
         if isinstance(config.hidden_act, str):
             self.intermediate_act_fn = ACT2FN[config.hidden_act]
         else:
@@ -545,6 +569,7 @@ class ElectraIntermediate(nn.Module):
     def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
         hidden_states = self.dense(hidden_states)
         hidden_states = self.intermediate_act_fn(hidden_states)
+
         return hidden_states
 
 
@@ -564,6 +589,7 @@ class ElectraOutput(nn.Module):
         hidden_states = self.dense(hidden_states)
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
+
         return hidden_states
 
 
@@ -576,6 +602,7 @@ class ElectraLayer(nn.Module):
         self.attention = ElectraAttention(config)
         self.is_decoder = config.is_decoder
         self.add_cross_attention = config.add_cross_attention
+
         if self.add_cross_attention:
             if not self.is_decoder:
                 raise ValueError(
@@ -604,6 +631,7 @@ class ElectraLayer(nn.Module):
             self.prev_layer_weights, dim=-1
         )
         x = prev_layer_weights[0] * hidden_states[0]
+
         for i, hidden_state in enumerate(hidden_states[1:]):
             x = x + prev_layer_weights[i + 1] * hidden_state
 
@@ -620,6 +648,7 @@ class ElectraLayer(nn.Module):
         attention_output = self_attention_outputs[0]
 
         # if decoder, the last output is tuple of self-attn cache
+
         if self.is_decoder:
             outputs = self_attention_outputs[1:-1]
             present_key_value = self_attention_outputs[-1]
@@ -629,6 +658,7 @@ class ElectraLayer(nn.Module):
             ]  # add self attentions if we output attention weights
 
         cross_attn_present_key_value = None
+
         if self.is_decoder and encoder_hidden_states is not None:
             if not hasattr(self, "crossattention"):
                 raise ValueError(
@@ -667,6 +697,7 @@ class ElectraLayer(nn.Module):
         outputs = (layer_output,) + outputs
 
         # if decoder, return the attn key/values as the last output
+
         if self.is_decoder:
             outputs = outputs + (present_key_value,)
 
@@ -675,6 +706,7 @@ class ElectraLayer(nn.Module):
     def feed_forward_chunk(self, attention_output):
         intermediate_output = self.intermediate(attention_output)
         layer_output = self.output(intermediate_output, attention_output)
+
         return layer_output
 
 
@@ -717,6 +749,7 @@ class ElectraEncoder(nn.Module):
                 use_cache = False
 
         next_decoder_cache = () if use_cache else None
+
         for i, layer_module in enumerate(self.layer):
             if output_hidden_states:
                 all_hidden_states = all_hidden_states + (hidden_states,)
@@ -755,8 +788,10 @@ class ElectraEncoder(nn.Module):
 
             if use_cache:
                 next_decoder_cache += (layer_outputs[-1],)
+
             if output_attentions:
                 all_self_attentions = all_self_attentions + (layer_outputs[1],)
+
                 if self.config.add_cross_attention:
                     all_cross_attentions = all_cross_attentions + (
                         layer_outputs[2],
@@ -777,6 +812,7 @@ class ElectraEncoder(nn.Module):
                 ]
                 if v is not None
             )
+
         return BaseModelOutputWithPastAndCrossAttentions(
             last_hidden_state=hidden_states,
             past_key_values=next_decoder_cache,
@@ -838,18 +874,21 @@ class ElectraPreTrainedModel(PreTrainedModel):
 
     def _init_weights(self, module):
         """Initialize the weights"""
+
         if isinstance(module, nn.Linear):
             # Slightly different from the TF version which uses truncated_normal for initialization
             # cf https://github.com/pytorch/pytorch/pull/5617
             module.weight.data.normal_(
                 mean=0.0, std=self.config.initializer_range
             )
+
             if module.bias is not None:
                 module.bias.data.zero_()
         elif isinstance(module, nn.Embedding):
             module.weight.data.normal_(
                 mean=0.0, std=self.config.initializer_range
             )
+
             if module.padding_idx is not None:
                 module.weight.data[module.padding_idx].zero_()
         elif isinstance(module, nn.LayerNorm):
