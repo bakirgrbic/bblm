@@ -1,9 +1,14 @@
+"""Older tests for pretraining pipeline. Removed because I will be switching
+over to the huggingface api and won't need my own custom pipeline or its
+slow tests.
+"""
+
 import pytest
 import torch
 from transformers import AutoTokenizer
 
-from bblm.tasks.pretraining.dataset import SpecialTokens
-from bblm.tasks.pretraining.pretraining import (
+from bblm.dataset import SpecialTokens
+from bblm.pretraining import (
     create_dataloader,
     create_dataset,
     get_file_names,

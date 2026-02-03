@@ -1,6 +1,6 @@
 import pytest
 
-from bblm.cli.download_data import download_bblm, download_wos
+from bblm.download_data import download_bblm, download_wos
 
 
 @pytest.mark.integration

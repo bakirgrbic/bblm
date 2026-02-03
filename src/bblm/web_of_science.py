@@ -9,11 +9,9 @@ import transformers
 from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 
-from bblm.tasks.finetuning.web_of_science.auto import AutoClass
-from bblm.tasks.finetuning.web_of_science.multilabeldataset import (
-    MultiLabelDataset,
-)
-from bblm.utils.device import auto_choose_device
+from bblm.auto import AutoClass
+from bblm.multilabeldataset import MultiLabelDataset
+from bblm.utils import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
 

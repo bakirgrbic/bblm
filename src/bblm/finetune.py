@@ -6,12 +6,12 @@ import logging
 
 from transformers import AutoTokenizer
 
-from bblm.tasks.finetuning.web_of_science.wos import (
+from bblm.utils import setup_logger
+from bblm.wos import (
     create_dataloaders,
     load_data,
     wos_task,
 )
-from bblm.utils.log import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:
