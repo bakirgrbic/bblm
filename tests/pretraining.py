@@ -15,12 +15,15 @@ from bblm.pretraining import (
     pre_train_task,
 )
 
-MODEL_NAME = "bakirgrbic/electra-tiny"
+
+@pytest.fixture
+def model_name():
+    return "bakirgrbic/electra-tiny"
 
 
 @pytest.fixture(scope="module")
-def tokenizer():
-    return AutoTokenizer.from_pretrained(MODEL_NAME)
+def tokenizer(model_name):
+    return AutoTokenizer.from_pretrained(model_name)
 
 
 class TestPretraining:
@@ -90,13 +93,13 @@ class TestPretraining:
     )
     @pytest.mark.integration
     def test_pre_train_task_raise_no_error(
-        self, small_pt_dataloader, tmp_path, device
+        self, small_pt_dataloader, tmp_path, device, model_name
     ):
         EPOCHS = 1
         LEARNING_RATE = 2e-05
 
         pre_train_task(
-            model_name=MODEL_NAME,
+            model_name=model_name,
             revision="main",
             loader=small_pt_dataloader,
             epochs=EPOCHS,
@@ -120,7 +123,7 @@ class TestPretraining:
     )
     @pytest.mark.benchmark
     def test_pt_task_bench(
-        self, device, small_pt_dataloader, tmp_path, benchmark
+        self, device, small_pt_dataloader, tmp_path, benchmark, model_name
     ):
         """Not a necessary test but nice to experiment with pytest-benchmark plugin."""
         EPOCHS = 1
@@ -128,7 +131,7 @@ class TestPretraining:
 
         benchmark(
             pre_train_task,
-            model_name=MODEL_NAME,
+            model_name=model_name,
             revision="main",
             loader=small_pt_dataloader,
             epochs=EPOCHS,

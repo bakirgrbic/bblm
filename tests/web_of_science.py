@@ -11,7 +11,10 @@ from bblm.wos import (
     wos_task,
 )
 
-MODEL_NAME = "bakirgrbic/electra-tiny"
+
+@pytest.fixture
+def model_name():
+    return "bakirgrbic/electra-tiny"
 
 
 @pytest.fixture
@@ -34,8 +37,8 @@ def small_wos_data(wos_data):
 
 
 @pytest.fixture
-def small_wos_dataloaders(small_wos_data):
-    TOKENIZER = AutoTokenizer.from_pretrained(MODEL_NAME)
+def small_wos_dataloaders(small_wos_data, model_name):
+    TOKENIZER = AutoTokenizer.from_pretrained(model_name)
     MAX_LEN = 128
     BATCH_SIZE = 64
     train_data, train_labels, test_data, test_labels = small_wos_data
@@ -96,14 +99,14 @@ def test_first_sample_matches_for_train_and_data(wos_data):
     ],
 )
 @pytest.mark.integration
-def test_wos_task_raise_no_error(small_wos_dataloaders, device):
+def test_wos_task_raise_no_error(small_wos_dataloaders, model_name, device):
     TRAIN = 0
     TEST = 1
     EPOCHS = 1
     LEARNING_RATE = 2e-05
 
     wos_task(
-        model_name=MODEL_NAME,
+        model_name=model_name,
         revision="main",
         training_loader=small_wos_dataloaders[TRAIN],
         testing_loader=small_wos_dataloaders[TEST],
@@ -127,7 +130,7 @@ def test_wos_task_raise_no_error(small_wos_dataloaders, device):
     ],
 )
 @pytest.mark.benchmark
-def test_wos_task_bench(device, small_wos_dataloaders, benchmark):
+def test_wos_task_bench(device, small_wos_dataloaders, benchmark, model_name):
     """Not a necessary test but nice to experiment with pytest-benchmark plugin."""
     TRAIN = 0
     TEST = 1
@@ -136,7 +139,7 @@ def test_wos_task_bench(device, small_wos_dataloaders, benchmark):
 
     benchmark(
         wos_task,
-        model_name=MODEL_NAME,
+        model_name=model_name,
         revision="main",
         training_loader=small_wos_dataloaders[TRAIN],
         testing_loader=small_wos_dataloaders[TEST],
