@@ -1,29 +1,30 @@
-"""Defines Auto class used for web of science finetuning."""
+"""Implements my own generalizable AutoModel for text classification."""
 
 import torch
-from transformers import AutoModel
+from transformers import AutoConfig, AutoModel
 
 
-class AutoClass(torch.nn.Module):
-    """Auto class for finetuning pretrained models."""
-
-    def __init__(self, model_name: str, revision: str, num_out: int) -> None:
-        """Constructor.
-
+class MyAutoModelTextClassifier(torch.nn.Module):
+    def __init__(
+        self, model_name: str, num_out: int, revision: str | None = None
+    ) -> None:
+        """
         Parameters
         ----------
         model_name
             relative file path of pretrained model or name from huggingface
-        revision
-            the specific commit of a model to use from huggingface.
         num_out
             number of classes to classify
+        revision
+            the specific commit of a model to use from huggingface.
         """
         super().__init__()
         self.transformer_layer = AutoModel.from_pretrained(
             model_name, revision=revision
         )
-        self.classifier = torch.nn.Linear(196, num_out)
+        # config needed to get appropriate hidden size for any model
+        config = AutoConfig.from_pretrained(model_name)
+        self.classifier = torch.nn.Linear(config.hidden_size, num_out)
 
     def forward(
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor

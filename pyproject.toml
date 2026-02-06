@@ -15,14 +15,13 @@ dev = [
     "bandit[toml]",
 ]
 
-# Commented out mypy because it was not being nice to reused code for electra_tiny_elc.py
-# [tool.mypy]
-# python_version = "3.10"
-# disallow_untyped_defs = true
-# ignore_missing_imports = true
-# exclude = [ # Note that this only excludes discovery when using mypy from cli
-#     "tests",
-# ]
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = [ # Note that this only excludes discovery when using mypy from cli
+    "tests",
+]
 
 [tool.pytest.ini_options]
 markers = [
