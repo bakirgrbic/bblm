@@ -6,13 +6,13 @@ import logging
 
 from transformers import AutoTokenizer
 
-from bblm.tasks.pretraining.pretraining import (
+from bblm.pretraining import (
     create_dataloader,
     create_dataset,
     get_file_names,
     pre_train_task,
 )
-from bblm.utils.log import setup_logger
+from bblm.utils import setup_logger
 
 
 def get_parser() -> argparse.ArgumentParser:

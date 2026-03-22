@@ -9,8 +9,8 @@ import transformers
 from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 
-from bblm.auto import AutoClass
 from bblm.multilabeldataset import MultiLabelDataset
+from bblm.my_text_classifier.modeling import MyTextClassifier
 from bblm.utils import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
@@ -116,7 +116,7 @@ def loss_fn(outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
 
 
 def train(
-    model: AutoClass,
+    model: MyTextClassifier,
     training_loader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Adam,
     device: str,
@@ -155,7 +155,9 @@ def train(
 
 
 def test(
-    model: AutoClass, testing_loader: torch.utils.data.DataLoader, device: str
+    model: MyTextClassifier,
+    testing_loader: torch.utils.data.DataLoader,
+    device: str,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Testing loop for wos finetuning task.
 
@@ -192,7 +194,7 @@ def test(
 
 
 def finetune(
-    model: AutoClass,
+    model: MyTextClassifier,
     training_loader: torch.utils.data.DataLoader,
     testing_loader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Adam,
@@ -264,7 +266,7 @@ def wos_task(
 
     NUM_OUT = len(DocumentTopics)
 
-    model = AutoClass(model_name, revision, NUM_OUT)
+    model = MyTextClassifier(model_name, NUM_OUT, revision)
 
     if not device:
         device = auto_choose_device()
