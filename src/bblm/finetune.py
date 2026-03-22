@@ -7,7 +7,7 @@ import logging
 from transformers import AutoTokenizer
 
 from bblm.utils import setup_logger
-from bblm.wos import (
+from bblm.web_of_science import (
     create_dataloaders,
     load_data,
     wos_task,
