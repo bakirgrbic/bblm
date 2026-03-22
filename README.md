@@ -40,7 +40,7 @@ To only run slower performance tests use:
 pytest -m "benchmark"
 ```
 
-Proceed to [Pretraining](#pretraining) or [WoS Text Classification](#wos-text-classification) to begin training and evaluating models!
+Proceed to [Pretraining](#pretraining) or [WoS Text Classification](#wos-text-classification) to begin training and evaluating models
 
 
 ## Training
