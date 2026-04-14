@@ -6,7 +6,7 @@ from transformers import PreTrainedConfig
 class MyConfig(PreTrainedConfig):
     def __init__(
         self,
-        model_name: str,
+        model_name: str = "bakirgrbic/electra-tiny",
         num_classes: int = 1000,
         **kwargs,
     ) -> None:

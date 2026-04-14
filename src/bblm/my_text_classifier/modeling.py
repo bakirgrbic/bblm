@@ -1,30 +1,22 @@
 """Implements my own model for text classification."""
 
 import torch
-from transformers import AutoConfig, AutoModel
+from transformers import AutoConfig, AutoModel, PreTrainedModel
+
+from bblm.my_text_classifier.configuration import MyConfig
 
 
-class MyTextClassifier(torch.nn.Module):
-    def __init__(
-        self, model_name: str, num_classes: int, revision: str | None = None
-    ) -> None:
-        """
-        Parameters
-        ----------
-        model_name
-            relative file path of pretrained model or name from huggingface
-        num_classes
-            number of classes to classify
-        revision
-            the specific commit of a model to use from huggingface.
-        """
-        super().__init__()
-        self.transformer_layer = AutoModel.from_pretrained(
-            model_name, revision=revision
+class MyTextClassifier(PreTrainedModel):
+    def __init__(self, config: MyConfig) -> None:
+        super().__init__(config)
+
+        self.transformer_layer = AutoModel.from_pretrained(config.model_name)
+
+        # redeundant config needed to get appropriate hidden size for any model
+        config_for_hidden = AutoConfig.from_pretrained(config.model_name)
+        self.classifier = torch.nn.Linear(
+            config_for_hidden.hidden_size, config.num_classes
         )
-        # config needed to get appropriate hidden size for any model
-        config = AutoConfig.from_pretrained(model_name)
-        self.classifier = torch.nn.Linear(config.hidden_size, num_classes)
 
     def forward(
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor

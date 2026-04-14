@@ -26,7 +26,8 @@ def sample_data():
 def test_model_forward_pass_raise_no_error(model_name, sample_data):
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    model = MyTextClassifier(model_name, num_out=2)
+    config = MyConfig(model_name, num_classes=2)
+    model = MyTextClassifier(config)
 
     inputs = tokenizer(
         sample_data,
@@ -49,7 +50,7 @@ def test_model_forward_pass_raise_no_error(model_name, sample_data):
     ],
 )
 def test_config_save_no_error(model_name, tmp_path):
-    config = MyConfig(model_name, num_classes=2)
+    config = MyConfig(model_name=model_name, num_classes=2)
 
     config.save_pretrained(tmp_path)
 
@@ -70,7 +71,7 @@ def test_config_save_no_error(model_name, tmp_path):
     ],
 )
 def test_config_load_no_error(model_name, tmp_path):
-    config = MyConfig(model_name, num_classes=2)
+    config = MyConfig(model_name=model_name, num_classes=2)
 
     config.save_pretrained(tmp_path)
 
@@ -91,7 +92,8 @@ def test_config_load_no_error(model_name, tmp_path):
     ],
 )
 def test_model_save_no_error(model_name, tmp_path):
-    model = MyTextClassifier(model_name, num_out=2)
+    config = MyConfig(model_name, num_classes=2)
+    model = MyTextClassifier(config)
 
     model.save_pretrained(tmp_path)
 
@@ -113,9 +115,9 @@ def test_model_save_no_error(model_name, tmp_path):
     ],
 )
 def test_model_load_no_error(model_name, tmp_path):
-    model = MyTextClassifier(model_name, num_out=2)
+    config = MyConfig(model_name, num_classes=2)
+    model = MyTextClassifier(config)
 
     model.save_pretrained(tmp_path)
 
-    MyTextClassifier.from_config(tmp_path)
     MyTextClassifier.from_pretrained(tmp_path)
