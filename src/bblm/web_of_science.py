@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 
 from bblm.multilabeldataset import MultiLabelDataset
-from bblm.my_text_classifier.modeling import MyTextClassifier
+from bblm.my_text_classifier.modeling import AutoTextModel
 from bblm.utils import auto_choose_device
 
 logger = logging.getLogger("main." + __name__)
@@ -116,7 +116,7 @@ def loss_fn(outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
 
 
 def train(
-    model: MyTextClassifier,
+    model: AutoTextModel,
     training_loader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Adam,
     device: str,
@@ -155,7 +155,7 @@ def train(
 
 
 def test(
-    model: MyTextClassifier,
+    model: AutoTextModel,
     testing_loader: torch.utils.data.DataLoader,
     device: str,
 ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -180,7 +180,7 @@ def test(
     model.eval()
     fin_targets = []
     fin_outputs = []
-    with torch.no_grad():
+    with torch.inference_mode():
         for data in tqdm(testing_loader):
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
@@ -194,7 +194,7 @@ def test(
 
 
 def finetune(
-    model: MyTextClassifier,
+    model: AutoTextModel,
     training_loader: torch.utils.data.DataLoader,
     testing_loader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Adam,
@@ -266,7 +266,7 @@ def wos_task(
 
     NUM_OUT = len(DocumentTopics)
 
-    model = MyTextClassifier(model_name, NUM_OUT, revision)
+    model = AutoTextModel(model_name, NUM_OUT, revision)
 
     if not device:
         device = auto_choose_device()

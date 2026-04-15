@@ -25,15 +25,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          environment-file: environment.yml
           activate-environment: bblm
 
-      - name: Install local package and dev tools
-        run: |
-          pip install -e .[dev]
+      - name: Install dependencies
+        run: pip install -e .[dev]
 
       - name: Run pre-commit linting checks
         run: |
