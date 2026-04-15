@@ -3,19 +3,21 @@ name = "bblm"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "transformers==5.5.4",
-    "torch==2.11.0",
-    "osfclient==0.0.5",
+    "transformers>=5.5.4",
+    "torch>=2.11.0",
+    "scikit-learn>=1.7.2",
+    "tqdm>=4.67.3",
+    "osfclient>=0.0.5",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest==8.3.4",
-    "pytest-benchmark==5.1.0",
+    "pytest>=8.3.4",
+    "pytest-benchmark>=5.1.0",
     "pytest-html",
-    "ruff==0.11.10",
-    "mypy==1.15.0",
-    "jedi-language-server==0.45.1",
+    "ruff>=0.11.10",
+    "mypy>=1.15.0",
+    "jedi-language-server>=0.45.1",
     "pre-commit",
     "bandit[toml]",
 ]

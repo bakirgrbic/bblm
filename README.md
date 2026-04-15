@@ -12,7 +12,7 @@ Tested on arm64 MacOS and AWS Sagemaker environments.
 
 Install the [conda](https://anaconda.org/) command line tool and use the following commands to simply run finetuning and pretraining scripts:
 ```shell
-conda env create -f environment.yml
+conda create -n bblm python=3.10.0
 conda activate bblm
 pip install .
 ```

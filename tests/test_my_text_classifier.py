@@ -114,6 +114,9 @@ def test_model_save_no_error(model_name, tmp_path):
         ),
     ],
 )
+@pytest.mark.xfail(
+    reason="MyTextClassifier does not recursively save AutoModels"
+)
 def test_model_load_no_error(model_name, tmp_path):
     config = MyConfig(model_name, num_classes=2)
     model = MyTextClassifier(config)

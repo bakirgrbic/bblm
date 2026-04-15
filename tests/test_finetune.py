@@ -1,11 +1,7 @@
-"""Older tests for web of science text classification pipeline.
-Removed for the same reasons stated in old pretraining.py test file.
-"""
-
 import pytest
 from transformers import AutoTokenizer
 
-from bblm.wos import (
+from bblm.web_of_science import (
     create_dataloaders,
     load_data,
     wos_task,

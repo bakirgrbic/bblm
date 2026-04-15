@@ -1,8 +1,3 @@
-"""Older tests for pretraining pipeline. Removed because I will be switching
-over to the huggingface api and won't need my own custom pipeline or its
-slow tests.
-"""
-
 import pytest
 import torch
 from transformers import AutoTokenizer
@@ -16,7 +11,7 @@ from bblm.pretraining import (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def model_name():
     return "bakirgrbic/electra-tiny"
 
